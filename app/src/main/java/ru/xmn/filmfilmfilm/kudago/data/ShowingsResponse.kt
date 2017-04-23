@@ -1,4 +1,4 @@
-package api.kudago.data
+package ru.xmn.filmfilmfilm.kudago.data
 
 class KudaGoShowingsResponse(
         val count: Int,
@@ -28,7 +28,7 @@ class KudaGoShowingResponse(
 )
 
 class Place(
-        val id: Integer,
+        val id: Int,
         val title: String,
         val slug: String,
         val address: String,
@@ -38,7 +38,7 @@ class Place(
 )
 
 class Movie(
-        val id: Integer,
+        val id: Int,
         val title: String,
         val poster: Poster
 )
