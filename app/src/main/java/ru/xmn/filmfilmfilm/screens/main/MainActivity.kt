@@ -4,18 +4,18 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import ru.xmn.filmfilmfilm.R
-import ru.xmn.filmfilmfilm.application.di.ApplicationComponent
+import ru.xmn.filmfilmfilm.application.App
 import ru.xmn.filmfilmfilm.common.ui.BaseActivity
 import ru.xmn.filmfilmfilm.screens.main.onedayfilms.OneDayFilmsFragment
 
-class MainActivity : BaseActivity() {
-    override fun injectDependencies(applicationComponent: ApplicationComponent) {
-        applicationComponent.plus(MainActivityModule())
-                .inject(this)
-    }
+class MainActivity : BaseActivity<MainActivityComponent>() {
+    override fun createComponent(): MainActivityComponent = App.component.plus(MainActivityModule())
+
+    override fun getTag(): String = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        getComponent().inject(this)
         setContentView(R.layout.activity_main)
         changeFragment(OneDayFilmsFragment())
     }

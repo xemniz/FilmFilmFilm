@@ -9,8 +9,8 @@ class App : Application() {
 
     companion object {
         lateinit var component: ApplicationComponent
-        private val TAG: String = "App"
-        private val DAGGER_COMPONENT: String = "AppComponent"
+        val TAG: String = "App"
+        val DAGGER_COMPONENT: String = "AppComponent"
     }
 
     override fun onCreate() {

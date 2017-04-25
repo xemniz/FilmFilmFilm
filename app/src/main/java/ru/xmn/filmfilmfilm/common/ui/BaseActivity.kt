@@ -1,21 +1,86 @@
 package ru.xmn.filmfilmfilm.common.ui
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import com.zhuinden.servicetree.ServiceTree
 import ru.xmn.filmfilmfilm.application.App
-import ru.xmn.filmfilmfilm.application.di.ApplicationComponent
+import java.util.*
+import kotlin.collections.ArrayList
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity<Component : Any> : AppCompatActivity() {
 
-    companion object {
-        val IMAGE_TRANSITION_NAME = "activity_image_transition"
-    }
+    private val serviceTree: ServiceTree
+        get() = App.component.serviceTree()
 
-    @Suppress("UNCHECKED_CAST")
+    lateinit var componentInit: Component
+
+
+    private var activeTags: List<String> = ArrayList<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        componentInit = if (serviceTree.hasNodeWithKey(getTag())) {
+            val node = serviceTree.createChildNode(serviceTree.treeRoot, getTag())
+            val component = createComponent()
+            node.bindService(App.DAGGER_COMPONENT, component)
+            component
+        } else {
+            serviceTree.getNode(getTag()) as Component
+        }
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            val newTags = collectActiveTags()
+            activeTags
+                    .filter { !newTags.contains(it) }
+                    .forEach {
+                        Log.d(getTag(), "Destroying [$it]")
+                        serviceTree.removeNodeAndChildren(serviceTree.getNode(it))
+                    }
+            activeTags = newTags
+        }
+
         super.onCreate(savedInstanceState)
-        injectDependencies(App.component)
+
+        if (activeTags.isEmpty() && supportFragmentManager.fragments != null) { // handle process death
+            activeTags = collectActiveTags()
+        }
     }
 
-    abstract fun injectDependencies(applicationComponent: ApplicationComponent)
+    private fun collectActiveTags(): List<String> {
+        val fragments: List<Fragment> = supportFragmentManager.fragments ?: emptyList<Fragment>()
+
+        val newTags = LinkedList<String>()
+        for (fragment in fragments) {
+            if (fragment != null && fragment is HasServices) { // active fragments is a list that can have NULL element
+                val serviceFragment = fragment
+                val newTag = serviceFragment.getNodeTag()
+                newTags.add(newTag)
+            }
+        }
+        return newTags
+    }
+
+    fun registerFragmentServices(fragment: Fragment?) {
+        if (fragment != null && fragment is HasServices) {
+            val serviceFragment = fragment
+            val newTag = serviceFragment.getNodeTag()
+            if (!serviceTree.hasNodeWithKey(newTag)) {
+                serviceFragment.bindServices(serviceTree.createChildNode(serviceTree.getNode(getTag()), newTag))
+            }
+        }
+    }
+
+    fun getComponent(): Component = componentInit
+
+    abstract fun createComponent(): Component
+
+    abstract fun getTag(): String
+}
+
+interface HasServices {
+    fun getNodeTag(): String
+
+    fun bindServices(node: ServiceTree.Node)
 }
