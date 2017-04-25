@@ -8,7 +8,9 @@ import ru.xmn.filmfilmfilm.application.di.DaggerApplicationComponent
 class App : Application() {
 
     companion object {
-        lateinit var graph: ApplicationComponent
+        lateinit var component: ApplicationComponent
+        private val TAG: String = "App"
+        private val DAGGER_COMPONENT: String = "AppComponent"
     }
 
     override fun onCreate() {
@@ -17,8 +19,10 @@ class App : Application() {
     }
 
     fun initializeDagger() {
-        graph = DaggerApplicationComponent.builder()
+        component = DaggerApplicationComponent.builder()
                 .applicationModule(ApplicationModule(this))
                 .build()
+
+        component.serviceTree().createRootNode(TAG).bindService(DAGGER_COMPONENT, component)
     }
 }

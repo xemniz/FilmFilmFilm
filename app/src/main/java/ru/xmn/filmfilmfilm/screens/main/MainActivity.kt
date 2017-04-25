@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.application.di.ApplicationComponent
 import ru.xmn.filmfilmfilm.common.ui.BaseActivity
+import ru.xmn.filmfilmfilm.screens.main.onedayfilms.OneDayFilmsFragment
 
 class MainActivity : BaseActivity() {
     override fun injectDependencies(applicationComponent: ApplicationComponent) {
@@ -16,6 +17,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        changeFragment(OneDayFilmsFragment())
     }
 
     fun changeFragment(f: Fragment, cleanStack: Boolean = false) {

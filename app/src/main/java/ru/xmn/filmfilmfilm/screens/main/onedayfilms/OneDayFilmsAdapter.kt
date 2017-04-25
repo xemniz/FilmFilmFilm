@@ -10,7 +10,7 @@ import kotlin.properties.Delegates
 
 class OneDayFilmsAdapter : RecyclerView.Adapter<OneDayFilmsAdapter.ViewHolder>(), AutoUpdatableAdapter {
 
-    var items: List<Any> by Delegates.observable(emptyList()) {
+    var items: List<FilmItemViewModel> by Delegates.observable(emptyList()) {
         _, old, new ->
         autoNotify(old, new) { o, n -> o == n }
     }
@@ -26,7 +26,7 @@ class OneDayFilmsAdapter : RecyclerView.Adapter<OneDayFilmsAdapter.ViewHolder>()
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(any: Any) {
+        fun bind(any: FilmItemViewModel) {
 
         }
 

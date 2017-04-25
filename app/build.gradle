@@ -46,7 +46,8 @@ dependencies {
             "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion",
             "com.squareup.retrofit2:converter-moshi:2.0.0",
             "com.squareup.okhttp3:okhttp:$okhttpVersion",
-            "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+            "com.squareup.okhttp3:logging-interceptor:$okhttpVersion",
+            'com.github.Zhuinden:service-tree:1.4.0'
     )
 
     compile ("com.squareup.retrofit2:retrofit:$retrofitVersion"){
@@ -65,4 +66,5 @@ sourceSets {
 }
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }

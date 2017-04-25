@@ -14,7 +14,7 @@ abstract class BaseActivity : AppCompatActivity() {
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        injectDependencies(App.graph)
+        injectDependencies(App.component)
     }
 
     abstract fun injectDependencies(applicationComponent: ApplicationComponent)
