@@ -19,27 +19,28 @@ import javax.inject.Singleton
 class DataModule {
 
     @Provides @Singleton
-    fun provideCache(context: Context) = Cache(context.cacheDir, 10 * 1024 * 1024.toLong())
+    fun provideCache(context: Context)
+            = Cache(context.cacheDir, 10 * 1024 * 1024.toLong())
 
     @Provides @Singleton
-    fun provideOkHttpClient(cache: Cache): OkHttpClient =
-            OkHttpClient().newBuilder()
-                    .cache(cache)
-                    .addInterceptor(HttpLoggingInterceptor().apply {
-                        level = if (BuildConfig.DEBUG) Level.BODY else Level.NONE
-                    })
-                    .build()
+    fun provideOkHttpClient(cache: Cache): OkHttpClient
+            = OkHttpClient().newBuilder()
+            .cache(cache)
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG) Level.BODY else Level.NONE
+            })
+            .build()
 
     @Provides @Singleton
-    fun provideRestAdapter(client: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-                .baseUrl("https://kudago.com/public-api/v1.3/")
-                .client(client)
-                .addConverterFactory(MoshiConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-    }
+    fun provideRestAdapter(client: OkHttpClient): Retrofit
+            = Retrofit.Builder()
+            .baseUrl("https://kudago.com/public-api/v1.3/")
+            .client(client)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
 
     @Provides @Singleton
-    fun providesKudaGoService(retrofit: Retrofit): KudaGoService = retrofit.create(KudaGoService::class.java)
+    fun providesKudaGoService(retrofit: Retrofit): KudaGoService
+            = retrofit.create(KudaGoService::class.java)
 }

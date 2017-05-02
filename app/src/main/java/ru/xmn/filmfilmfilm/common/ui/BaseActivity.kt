@@ -11,24 +11,23 @@ import kotlin.collections.ArrayList
 
 abstract class BaseActivity<Component : Any> : AppCompatActivity() {
 
-    private val serviceTree: ServiceTree
-        get() = App.component.serviceTree()
+    private val serviceTree: ServiceTree by lazy { App.component.serviceTree() }
 
-    lateinit var componentInit: Component
-
-
-    private var activeTags: List<String> = ArrayList<String>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-        componentInit = if (serviceTree.hasNodeWithKey(getTag())) {
+    val componentInit: Component by lazy {
+        if (!serviceTree.hasNodeWithKey(getTag())) {
             val node = serviceTree.createChildNode(serviceTree.treeRoot, getTag())
             val component = createComponent()
             node.bindService(App.DAGGER_COMPONENT, component)
             component
         } else {
-            serviceTree.getNode(getTag()) as Component
+            serviceTree.getNode(getTag()).getService<Component>(App.DAGGER_COMPONENT)
         }
+    }
+
+
+    private var activeTags: List<String> = ArrayList<String>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
 
         supportFragmentManager.addOnBackStackChangedListener {
             val newTags = collectActiveTags()

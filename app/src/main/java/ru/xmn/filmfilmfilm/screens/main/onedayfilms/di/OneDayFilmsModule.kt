@@ -1,4 +1,4 @@
-package ru.xmn.filmfilmfilm.screens.main.onedayfilms
+package ru.xmn.filmfilmfilm.screens.main.onedayfilms.di
 
 import dagger.Module
 

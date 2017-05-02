@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.application.App
 import ru.xmn.filmfilmfilm.common.ui.BaseActivity
-import ru.xmn.filmfilmfilm.screens.main.onedayfilms.OneDayFilmsFragment
+import ru.xmn.filmfilmfilm.screens.main.onedayfilms.mvp.OneDayFilmsFragment
 
 class MainActivity : BaseActivity<MainActivityComponent>() {
     override fun createComponent(): MainActivityComponent = App.component.plus(MainActivityModule())

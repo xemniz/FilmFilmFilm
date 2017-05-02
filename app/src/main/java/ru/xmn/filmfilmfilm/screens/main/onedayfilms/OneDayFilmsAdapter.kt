@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.ui.AutoUpdatableAdapter
 import ru.xmn.filmfilmfilm.common.inflate
+import ru.xmn.filmfilmfilm.screens.main.onedayfilms.viewmodels.FilmItemViewModel
 import kotlin.properties.Delegates
 
 class OneDayFilmsAdapter : RecyclerView.Adapter<OneDayFilmsAdapter.ViewHolder>(), AutoUpdatableAdapter {
