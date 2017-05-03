@@ -63,8 +63,8 @@ class OneDayFilmsFragment : Fragment(), HasServices, OneDayFilmView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(R.layout.fragment_one_day_films)
         movieList?.apply {
-            adapter = OneDayFilmsAdapter()
             layoutManager = LinearLayoutManager(context)
+            adapter = OneDayFilmsAdapter()
         }
         presenter.loadMovies()
 
