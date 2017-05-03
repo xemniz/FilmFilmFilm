@@ -16,6 +16,7 @@ import ru.xmn.filmfilmfilm.common.ui.HasServices
 import ru.xmn.filmfilmfilm.screens.main.MainActivity
 import ru.xmn.filmfilmfilm.screens.main.MainActivityComponent
 import ru.xmn.filmfilmfilm.screens.main.onedayfilms.OneDayFilmsAdapter
+import ru.xmn.filmfilmfilm.screens.main.onedayfilms.di.OneDayFilmsComponent
 import ru.xmn.filmfilmfilm.screens.main.onedayfilms.di.OneDayFilmsModule
 import ru.xmn.filmfilmfilm.screens.main.onedayfilms.viewmodels.FilmItemViewModel
 import javax.inject.Inject
@@ -26,7 +27,7 @@ class OneDayFilmsFragment : Fragment(), HasServices, OneDayFilmView {
     lateinit var presenter: OneDayFilmPresenter
 
     override fun showMovies(films: List<FilmItemViewModel>) {
-        (movieList?.adapter as? OneDayFilmsAdapter)?.items = films
+        (movieList.adapter as OneDayFilmsAdapter).items = films
     }
 
     override fun showError(error: String?) {
@@ -51,7 +52,6 @@ class OneDayFilmsFragment : Fragment(), HasServices, OneDayFilmView {
         val mainComponent: MainActivityComponent = node.getService(App.DAGGER_COMPONENT)
         val component = mainComponent.plus(OneDayFilmsModule())
         node.bindService(App.DAGGER_COMPONENT, component)
-        component.inject(this)
     }
 
     override fun onAttach(context: Context?) {
@@ -62,13 +62,19 @@ class OneDayFilmsFragment : Fragment(), HasServices, OneDayFilmView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(R.layout.fragment_one_day_films)
+        val component = App.component.serviceTree().getNode(getNodeTag()).getService<OneDayFilmsComponent>(App.DAGGER_COMPONENT)
+        component.inject(this)
+        presenter.attachView(this)
+        return view
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         movieList?.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = OneDayFilmsAdapter()
         }
         presenter.loadMovies()
-
-        return view
     }
 }
 

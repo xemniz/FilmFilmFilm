@@ -14,8 +14,7 @@ import ru.xmn.filmfilmfilm.common.loadUrl
 class OneDayFilmsAdapter : RecyclerView.Adapter<OneDayFilmsAdapter.ViewHolder>(), AutoUpdatableAdapter {
 
     var items: List<FilmItemViewModel> by Delegates.observable(emptyList()) {
-        _, old, new ->
-        autoNotify(old, new) { o, n -> o == n }
+        _, old, new -> autoNotify(old, new) { o, n -> o == n }
     }
 
     override fun getItemCount() = items.size
@@ -28,9 +27,14 @@ class OneDayFilmsAdapter : RecyclerView.Adapter<OneDayFilmsAdapter.ViewHolder>()
         return ViewHolder(parent.inflate(R.layout.film_item))
     }
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(film: FilmItemViewModel) {
-            itemView.poster.loadUrl(film.image)
+            itemView.apply {
+                poster.loadUrl(film.image)
+                filmName.text = film.title
+                director.text = "by ${film.director}"
+                genres.text = film.genres.joinToString(separator = " | ")
+            }
         }
 
     }

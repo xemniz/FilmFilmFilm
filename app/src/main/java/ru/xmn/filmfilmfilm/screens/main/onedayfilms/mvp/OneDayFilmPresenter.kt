@@ -22,7 +22,11 @@ constructor(val kudaGo: KudaGoService)
     : BasePresenter<OneDayFilmView>() {
 
     fun loadMovies() {
-        getMovies().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ view?.showMovies(it.results.map { it.toViewModel() }) })
+        getMovies().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    view?.showMovies(it.results.map { it.toViewModel() })
+                })
     }
 
     fun getMovies(): Observable<KudaGoMoviesResponse> {
