@@ -43,7 +43,7 @@ class Movie(
         val poster: Poster,
         val description: String,
         val body_text: String,
-        val genres: String,
+        val genres: List<Genre>,
         val original_title: String,
         val locale: String,
         val country: String,
@@ -56,12 +56,16 @@ class Movie(
         val writer: String,
         val awards: String,
         val trailer: String,
-        val images: String,
+        val images: List<Image>,
         val imdb_url: String,
         val imdb_rating: String
 )
 
-class Poster(val image: String?)
+class Genre(val id: Int,
+            val name: String,
+            val slug: String)
+
+class Poster(val image: String)
 
 
-class Image(val image: String?)
+class Image(val image: String)

@@ -4,10 +4,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import ru.xmn.filmfilmfilm.R
-import ru.xmn.filmfilmfilm.common.ui.AutoUpdatableAdapter
+import ru.xmn.filmfilmfilm.common.ui.adapter.AutoUpdatableAdapter
 import ru.xmn.filmfilmfilm.common.inflate
 import ru.xmn.filmfilmfilm.screens.main.onedayfilms.viewmodels.FilmItemViewModel
 import kotlin.properties.Delegates
+import kotlinx.android.synthetic.main.film_item.view.*
+import ru.xmn.filmfilmfilm.common.loadUrl
 
 class OneDayFilmsAdapter : RecyclerView.Adapter<OneDayFilmsAdapter.ViewHolder>(), AutoUpdatableAdapter {
 
@@ -27,8 +29,8 @@ class OneDayFilmsAdapter : RecyclerView.Adapter<OneDayFilmsAdapter.ViewHolder>()
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(any: FilmItemViewModel) {
-
+        fun bind(film: FilmItemViewModel) {
+            itemView.poster.loadUrl(film.image)
         }
 
     }

@@ -1,4 +1,4 @@
-package ru.xmn.filmfilmfilm.common.ui
+package ru.xmn.filmfilmfilm.common.ui.adapter
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
