@@ -51,7 +51,8 @@ dependencies {
             "com.squareup.okhttp3:okhttp:$okhttpVersion",
             "com.squareup.okhttp3:logging-interceptor:$okhttpVersion",
             'com.github.Zhuinden:service-tree:1.4.0',
-            'com.github.bumptech.glide:glide:3.7.0'
+            'com.github.bumptech.glide:glide:3.7.0',
+            'com.github.hotchemi:khronos:0.1.0'
     )
 
     compile ("com.squareup.retrofit2:retrofit:$retrofitVersion"){

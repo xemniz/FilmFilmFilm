@@ -12,7 +12,9 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.xmn.filmfilmfilm.BuildConfig
 import ru.xmn.filmfilmfilm.R
-import ru.xmn.filmfilmfilm.kudago.KudaGoService
+import ru.xmn.filmfilmfilm.servises.KudaGoService
+import ru.xmn.filmfilmfilm.servises.OmdbService
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -31,16 +33,27 @@ class DataModule {
             })
             .build()
 
-    @Provides @Singleton
-    fun provideRestAdapter(client: OkHttpClient): Retrofit
+    @Provides @Singleton @Named("kudago")
+    fun provideRestAdapter0(client: OkHttpClient): Retrofit
+            = provideRestAdapter(client, "https://kudago.com/public-api/v1.3/")
+
+    @Provides @Singleton @Named("omdb")
+    fun provideRestAdapter1(client: OkHttpClient): Retrofit
+            = provideRestAdapter(client, "http://www.omdbapi.com/")
+
+    fun provideRestAdapter(client: OkHttpClient, url: String): Retrofit
             = Retrofit.Builder()
-            .baseUrl("https://kudago.com/public-api/v1.3/")
+            .baseUrl(url)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
 
     @Provides @Singleton
-    fun providesKudaGoService(retrofit: Retrofit): KudaGoService
+    fun providesKudaGoService(@Named("kudago") retrofit: Retrofit): KudaGoService
             = retrofit.create(KudaGoService::class.java)
+
+    @Provides @Singleton
+    fun providesOmdbService(@Named("kudago") retrofit: Retrofit): OmdbService
+            = retrofit.create(OmdbService::class.java)
 }

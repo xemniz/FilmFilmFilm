@@ -1,7 +1,7 @@
 package ru.xmn.filmfilmfilm.screens.main.onedayfilms.mvp
 
 import ru.xmn.filmfilmfilm.common.ui.BaseView
-import ru.xmn.filmfilmfilm.kudago.data.KudaGoMoviesResponse
+import ru.xmn.filmfilmfilm.servises.data.KudaGoMoviesResponse
 import ru.xmn.filmfilmfilm.screens.main.onedayfilms.viewmodels.FilmItemViewModel
 
 /**

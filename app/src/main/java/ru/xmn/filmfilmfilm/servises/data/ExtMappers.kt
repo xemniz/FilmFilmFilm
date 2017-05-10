@@ -1,4 +1,4 @@
-package ru.xmn.filmfilmfilm.kudago.data
+package ru.xmn.filmfilmfilm.servises.data
 
 import ru.xmn.filmfilmfilm.screens.main.onedayfilms.viewmodels.FilmItemViewModel
 
