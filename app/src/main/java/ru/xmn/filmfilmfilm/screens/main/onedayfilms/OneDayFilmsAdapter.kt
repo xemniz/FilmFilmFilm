@@ -33,6 +33,7 @@ class OneDayFilmsAdapter : RecyclerView.Adapter<OneDayFilmsAdapter.ViewHolder>()
                 poster.loadUrl(film.image)
                 filmName.text = film.title
                 director.text = "by ${film.director}"
+                ratings.text = film.Ratings.filter { it.key != "Internet Movie Database" }.map { "${it.key} : ${it.value}" }.joinToString(", ")
                 genres.text = film.genres.joinToString(separator = " | ")
             }
         }

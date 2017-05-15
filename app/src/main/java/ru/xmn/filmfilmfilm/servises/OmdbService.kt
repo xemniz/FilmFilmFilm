@@ -6,8 +6,8 @@ import retrofit2.http.Query
 import ru.xmn.filmfilmfilm.servises.data.OmdbResponse
 
 interface OmdbService {
-    @GET()
-    fun getMovieShowings(
+    @GET("/")
+    fun getMovieInfo(
             @Query("i") imdbId: String)
             : Observable<OmdbResponse>
 

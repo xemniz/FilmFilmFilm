@@ -97,14 +97,14 @@
                 android:textColor="@color/subtitle"
                 tools:text="by Quentin Tarantino"/>
 
-            <RatingBar
-                style="?android:attr/ratingBarStyleSmall"
+            <TextView
+                android:id="@+id/ratings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:numStars="5"
-                android:stepSize="0.1"/>
+                android:lines="2"
+                tools:text="Criminal | Comedy\nCriminal | Comedy"/>
 
             <TextView
                 android:id="@+id/genres"
@@ -112,8 +112,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:lines="1"
-                tools:text="Criminal | Comedy"/>
+                android:lines="2"
+                tools:text="Criminal | Comedy\nCriminal | Comedy"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

@@ -54,6 +54,6 @@ class DataModule {
             = retrofit.create(KudaGoService::class.java)
 
     @Provides @Singleton
-    fun providesOmdbService(@Named("kudago") retrofit: Retrofit): OmdbService
+    fun providesOmdbService(@Named("omdb") retrofit: Retrofit): OmdbService
             = retrofit.create(OmdbService::class.java)
 }
