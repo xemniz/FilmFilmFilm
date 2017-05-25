@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.squareup.moshi.Moshi
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import ru.xmn.filmfilmfilm.BuildConfig
 import java.util.*
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
@@ -24,4 +27,20 @@ inline fun <reified T> Moshi.fromJson(json: String?): T? {
     return jsonAdapter.fromJson(json)
 }
 
-fun String.findFirstRegex(regex: Regex): String? = regex.find(this)?.value
+fun OkHttpClient.addParameterInterceptor(key: String, value: String): OkHttpClient {
+    return this.newBuilder()
+            .addInterceptor {
+                val url = it.request().url().newBuilder().addQueryParameter(key, value).build()
+                val request = it.request().newBuilder().url(url).build()
+                it.proceed(request)
+            }
+            .build()
+}
+
+fun OkHttpClient.addLoggingInterceptor(): OkHttpClient {
+    return this.newBuilder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+            })
+            .build()
+}
