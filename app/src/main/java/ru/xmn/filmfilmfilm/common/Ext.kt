@@ -11,6 +11,11 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.xmn.filmfilmfilm.BuildConfig
 import java.util.*
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Types
+import com.squareup.moshi.Types.newParameterizedType
+import java.lang.reflect.Type
+
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
@@ -25,6 +30,17 @@ fun Date.timeStamp(): Long = this.time / 1000
 inline fun <reified T> Moshi.fromJson(json: String?): T? {
     val jsonAdapter = this.adapter(T::class.java)
     return jsonAdapter.fromJson(json)
+}
+
+inline fun <reified T> Moshi.listFromJson(json: String?): List<T> {
+    val listMyData: Type = Types.newParameterizedType(List::class.java, T::class.java)
+    val adapter: JsonAdapter<List<T>> = this.adapter(listMyData)
+    return adapter.fromJson(json)
+}
+
+inline fun <reified T> T.toJson(): String {
+    val jsonAdapter = Moshi.Builder().build().adapter(T::class.java)
+    return jsonAdapter.toJson(this)
 }
 
 fun OkHttpClient.addParameterInterceptor(key: String, value: String): OkHttpClient {

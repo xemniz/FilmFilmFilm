@@ -17,6 +17,7 @@ import ru.xmn.filmfilmfilm.common.addLoggingInterceptor
 import ru.xmn.filmfilmfilm.common.addParameterInterceptor
 import ru.xmn.filmfilmfilm.servises.KudaGoService
 import ru.xmn.filmfilmfilm.servises.OmdbService
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -28,9 +29,13 @@ class DataModule {
             = Cache(context.cacheDir, 10 * 1024 * 1024.toLong())
 
     @Provides @Singleton
-    fun provideOkHttpClient(cache: Cache): OkHttpClient
-            = OkHttpClient().newBuilder()
-            .cache(cache)
+    fun provideOkHttpClient(): OkHttpClient
+            = OkHttpClient()
+            .newBuilder()
+            .connectTimeout(1, TimeUnit.HOURS)
+            .writeTimeout(1,TimeUnit.HOURS)
+            .readTimeout(1, TimeUnit.HOURS)
+//            .cache(cache)
             .build()
 
     @Provides @Singleton @Named("kudago")

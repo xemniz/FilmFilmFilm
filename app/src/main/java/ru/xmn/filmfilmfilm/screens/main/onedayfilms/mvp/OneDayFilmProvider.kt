@@ -1,15 +1,12 @@
 package ru.xmn.filmfilmfilm.screens.main.onedayfilms.mvp
 
-import com.vicpin.krealmextensions.query
-import com.vicpin.krealmextensions.queryAsObservable
-import com.vicpin.krealmextensions.queryFirst
-import com.vicpin.krealmextensions.save
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
 import khronos.*
 import ru.xmn.filmfilmfilm.application.di.scopes.FragmentScope
+import ru.xmn.filmfilmfilm.common.realmext.queryOneResultAsObservable
+import ru.xmn.filmfilmfilm.common.realmext.save
 import ru.xmn.filmfilmfilm.common.timeStamp
 import ru.xmn.filmfilmfilm.screens.main.onedayfilms.viewmodels.FilmItemViewModel
 import ru.xmn.filmfilmfilm.servises.KudaGoService
@@ -28,7 +25,6 @@ constructor(val kudaGo: KudaGoService, val omdb: OmdbService) {
                 .flatMap {
                     Observable.fromIterable(it.results)
                             .flatMap { getOmdbInfo(it) }
-                            .subscribeOn(Schedulers.io())
                 }
                 .map { it.toViewModel() }
                 .toList()
@@ -39,15 +35,22 @@ constructor(val kudaGo: KudaGoService, val omdb: OmdbService) {
         val imdbid: String? = """tt\d+""".toRegex().find(movie.imdb_url)?.value
         return when (imdbid) {
             null -> Observable.just(ABSENT)
-            else -> getOmdbInfoNetwork(imdbid, movie)
+            else -> Observable.concat(getOmdbInfoLocal(imdbid, movie), getOmdbInfoNetwork(imdbid, movie)).first(ABSENT).toObservable()
         }
     }
 
-    private fun getOmdbInfoLocal(imdbid: String, movie: Movie): rx.Observable<Pair<Movie, OmdbResponse?>> = OmdbFilm().queryAsObservable  { it.equalTo("imdbId", imdbid) }.map { Pair<Movie, OmdbResponse?>(movie, it.get(0)?.toModel()) }
+    private fun getOmdbInfoLocal(imdbid: String, movie: Movie): Observable<Pair<Movie, OmdbResponse?>> =
+            OmdbFilm()
+                    .queryOneResultAsObservable { it.equalTo("imdbID", imdbid) }
+                    .flatMap { Observable.fromIterable(it) }
+                    .firstElement()
+                    .map { Pair<Movie, OmdbResponse?>(movie, it.toModel()) }
+                    .toObservable()
 
-    private fun getOmdbInfoNetwork(imdbid: String, movie: Movie): Observable<Pair<Movie, OmdbResponse?>> = omdb.getMovieInfo(imdbid)
-            .doOnNext { it.toRealm().save() }
-            .map { Pair<Movie, OmdbResponse?>(movie, it) }
-            .doOnSubscribe { print("multithread ${Thread.currentThread().name}") }
-            .onErrorReturnItem(Pair<Movie, OmdbResponse?>(movie, null))
+    private fun getOmdbInfoNetwork(imdbid: String, movie: Movie): Observable<Pair<Movie, OmdbResponse?>> =
+            omdb.getMovieInfo(imdbid)
+                    .doOnNext { it.toRealm().save() }
+                    .map { Pair<Movie, OmdbResponse?>(movie, it) }
+                    .onErrorReturnItem(Pair<Movie, OmdbResponse?>(movie, null))
+                    .subscribeOn(Schedulers.io())
 }

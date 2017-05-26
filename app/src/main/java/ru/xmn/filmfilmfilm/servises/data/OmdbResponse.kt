@@ -1,16 +1,19 @@
 package ru.xmn.filmfilmfilm.servises.data
 
+import com.squareup.moshi.Moshi
 import io.realm.RealmObject
 import khronos.Dates
+import ru.xmn.filmfilmfilm.common.listFromJson
+import ru.xmn.filmfilmfilm.common.toJson
 import java.util.*
 
 
-class OmdbResponse(
+data class OmdbResponse(
         val Ratings: List<Rating>,
         val imdbID: String
 )
 
-class Rating(
+data class Rating(
         val Source: String,
         val Value: String
 )
@@ -23,13 +26,11 @@ open class OmdbFilm : RealmObject() {
 
 fun OmdbResponse.toRealm(): OmdbFilm = OmdbFilm().apply {
     imdbID = this@toRealm.imdbID
-    ratings = this@toRealm.Ratings.map { "${it.Source},${it.Value}" }.joinToString { ";" }
+    ratings = this@toRealm.Ratings.toJson()
     createdAt = Dates.now
 }
 
 fun OmdbFilm.toModel(): OmdbResponse {
-    val ratings = this.ratings?.split(";")
-            ?.map { Rating(it.split(",")[0], it.split(",")[1]) }
-            ?: emptyList()
+    val ratings = Moshi.Builder().build().listFromJson<Rating>(this.ratings)
     return OmdbResponse(ratings, this.imdbID!!)
 }
