@@ -1,4 +1,4 @@
-package ru.xmn.filmfilmfilm.screens.main.onedayfilms.mvp
+package ru.xmn.filmfilmfilm.screens.main.onedayfilms
 
 import android.arch.lifecycle.LifecycleFragment
 import android.arch.lifecycle.Observer
@@ -32,17 +32,8 @@ class FilmsFragment : LifecycleFragment() {
         }
     }
 
-    @Inject
-    lateinit var presenter: OneDayFilmPresenter
-
     fun showMovies(films: List<FilmItemViewModel>) {
         (movieList.adapter as OneDayFilmsAdapter).items = films
-    }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        val mainActivity = activity as MainActivity
-        mainActivity.registerFragmentServices(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

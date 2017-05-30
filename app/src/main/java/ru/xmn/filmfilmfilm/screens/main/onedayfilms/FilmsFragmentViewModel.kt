@@ -1,4 +1,4 @@
-package ru.xmn.filmfilmfilm.screens.main.onedayfilms.mvp
+package ru.xmn.filmfilmfilm.screens.main.onedayfilms
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel

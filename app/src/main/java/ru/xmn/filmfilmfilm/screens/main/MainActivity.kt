@@ -3,22 +3,16 @@ package ru.xmn.filmfilmfilm.screens.main
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v7.app.AppCompatActivity
 import ru.xmn.filmfilmfilm.R
-import ru.xmn.filmfilmfilm.application.App
-import ru.xmn.filmfilmfilm.common.ui.BaseActivity
-import ru.xmn.filmfilmfilm.screens.main.onedayfilms.mvp.FilmsFragment
-import ru.xmn.filmfilmfilm.screens.main.onedayfilms.mvp.OneDayFilmsFragment
+import ru.xmn.filmfilmfilm.screens.main.days.DaysFragment
 
-class MainActivity : BaseActivity<MainActivityComponent>() {
-    override fun createComponent(): MainActivityComponent = App.component.plus(MainActivityModule())
-
-    override fun getTag(): String = "MainActivity"
+class MainActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getComponent().inject(this)
         setContentView(R.layout.activity_main)
-        changeFragment(FilmsFragment.withDaysOffset(0))
+        changeFragment(DaysFragment())
     }
 
     fun changeFragment(f: Fragment, cleanStack: Boolean = false) {

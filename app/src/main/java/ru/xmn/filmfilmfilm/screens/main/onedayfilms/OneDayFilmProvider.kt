@@ -1,10 +1,11 @@
-package ru.xmn.filmfilmfilm.screens.main.onedayfilms.mvp
+package ru.xmn.filmfilmfilm.screens.main.onedayfilms
 
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import khronos.*
 import ru.xmn.filmfilmfilm.application.di.scopes.FragmentScope
+import ru.xmn.filmfilmfilm.common.realmext.query
 import ru.xmn.filmfilmfilm.common.realmext.queryOneResultAsObservable
 import ru.xmn.filmfilmfilm.common.realmext.save
 import ru.xmn.filmfilmfilm.common.timeStamp
@@ -40,8 +41,9 @@ constructor(val kudaGo: KudaGoService, val omdb: OmdbService) {
     }
 
     private fun getOmdbInfoLocal(imdbid: String, movie: Movie): Observable<Pair<Movie, OmdbResponse?>> =
-            OmdbFilm()
-                    .queryOneResultAsObservable { it.equalTo("imdbID", imdbid) }
+            Observable.fromCallable {
+                OmdbFilm().query { it.equalTo("imdbID", imdbid) }
+            }
                     .flatMap { Observable.fromIterable(it) }
                     .firstElement()
                     .map { Pair<Movie, OmdbResponse?>(movie, it.toModel()) }
