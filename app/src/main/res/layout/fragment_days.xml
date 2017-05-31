@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="ru.xmn.filmfilmfilm.screens.main.MainActivity">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="ru.xmn.filmfilmfilm.screens.main.MainActivity">
 
-    <android.support.design.widget.TabLayout
+    <ru.xmn.filmfilmfilm.common.views.FilmTabLayout
         android:id="@+id/tabLayout"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
+        android:tabStripEnabled="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteY="0dp"
-        app:tabMode="scrollable">
+        app:tabMode="scrollable"
+        app:tabIndicatorHeight="0dp">
 
-    </android.support.design.widget.TabLayout>
+    </ru.xmn.filmfilmfilm.common.views.FilmTabLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/daysPager"
@@ -32,5 +33,5 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"/>
 </android.support.constraint.ConstraintLayout>

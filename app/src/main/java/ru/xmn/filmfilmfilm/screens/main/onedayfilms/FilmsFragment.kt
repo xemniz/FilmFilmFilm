@@ -52,6 +52,7 @@ class FilmsFragment : LifecycleFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val offset = arguments.getInt(DAYS_OFFSET)
+        view?.setTag(offset)
         val factory = FilmsFragmentViewModel.Factory(
                 activity.application, offset)
 

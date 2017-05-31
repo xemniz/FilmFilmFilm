@@ -60,3 +60,5 @@ fun OkHttpClient.addLoggingInterceptor(): OkHttpClient {
             })
             .build()
 }
+
+fun Float.abs(): Float = Math.abs(this)
