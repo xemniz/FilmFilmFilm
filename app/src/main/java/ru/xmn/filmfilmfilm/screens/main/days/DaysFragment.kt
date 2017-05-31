@@ -9,6 +9,10 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import khronos.Dates
+import khronos.days
+import khronos.plus
+import khronos.toString
 import kotlinx.android.synthetic.main.fragment_days.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.inflate
@@ -27,6 +31,7 @@ class DaysFragment : LifecycleFragment() {
         daysPager?.apply {
             adapter = DaysAdapter(activity.supportFragmentManager)
         }
+        tabLayout.setupWithViewPager(daysPager)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -47,5 +52,18 @@ class DaysAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getItem(position: Int): Fragment = FilmsFragment.withDaysOffset(position)
 
     override fun getCount() = 10
+
+    override fun getPageTitle(position: Int): CharSequence =
+        when(position){
+            0 -> "Today"
+            1 -> "Tomorrow"
+            else -> position.offsetToDateTitle()
+        }
+
+    private fun Int.offsetToDateTitle(): CharSequence {
+        val date = Dates.now + this.days
+        return date.toString(format = "EEE MMM dd")
+    }
 }
+
 
