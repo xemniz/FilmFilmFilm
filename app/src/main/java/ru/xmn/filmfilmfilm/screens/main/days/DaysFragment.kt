@@ -1,7 +1,6 @@
 package ru.xmn.filmfilmfilm.screens.main.days
 
 import android.arch.lifecycle.LifecycleFragment
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -31,7 +30,7 @@ class DaysFragment : LifecycleFragment() {
         daysPager?.apply {
             adapter = DaysAdapter(activity.supportFragmentManager)
         }
-        tabLayout.setupWithViewPager(daysPager)
+        tabLayout.setUp(daysPager)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

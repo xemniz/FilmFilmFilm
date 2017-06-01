@@ -49,7 +49,7 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
 
-
+    compile 'com.nshmura:recyclertablayout:1.1.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:$supportLib"
     compile "com.android.support:recyclerview-v7:$supportLib"
