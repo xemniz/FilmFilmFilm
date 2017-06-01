@@ -1,6 +1,7 @@
 package ru.xmn.filmfilmfilm.common.views
 
 import android.content.Context
+import android.graphics.Color
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
@@ -65,6 +66,7 @@ private class FilmTabTextView(context: Context, attrs: AttributeSet?, defStyleAt
 
     init {
         changeTextSize(15F)
+        setTextColor(Color.WHITE)
     }
 
     fun scaleText(positionOffset: Float) {

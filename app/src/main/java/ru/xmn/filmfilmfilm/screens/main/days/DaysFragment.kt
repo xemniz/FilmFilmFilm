@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.fragment_days.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.inflate
 import ru.xmn.filmfilmfilm.screens.main.onedayfilms.FilmsFragment
-import ru.xmn.filmfilmfilm.screens.main.onedayfilms.FilmsFragmentViewModel
 
 class DaysFragment : LifecycleFragment() {
 
@@ -30,21 +29,12 @@ class DaysFragment : LifecycleFragment() {
         daysPager?.apply {
             adapter = DaysAdapter(activity.supportFragmentManager)
         }
-        tabLayout.setUp(daysPager)
+        tabLayout.setupWithViewPager(daysPager)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-//        val model = ViewModelProviders.of(this).get(FilmsFragmentViewModel::class.java)
-
-//        subscribeToModel(model)
     }
-
-    fun subscribeToModel(model: FilmsFragmentViewModel) {
-//        model.films.observe(this, Observer({ (movieList.adapter as OneDayFilmsAdapter).items = it ?: listOf() }))
-    }
-
 }
 
 class DaysAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
@@ -53,11 +43,11 @@ class DaysAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getCount() = 10
 
     override fun getPageTitle(position: Int): CharSequence =
-        when(position){
-            0 -> "Today"
-            1 -> "Tomorrow"
-            else -> position.offsetToDateTitle()
-        }
+            when (position) {
+                0 -> "Сегодня"
+                1 -> "Завтра"
+                else -> position.offsetToDateTitle()
+            }
 
     private fun Int.offsetToDateTitle(): CharSequence {
         val date = Dates.now + this.days
