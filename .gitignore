@@ -8,3 +8,4 @@
 /captures
 .externalNativeBuild
 app/src/main/java/ru/xmn/filmfilmfilm/application/Config.kt
+.idea/misc.xml
