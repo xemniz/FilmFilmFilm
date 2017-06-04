@@ -1,4 +1,4 @@
-package ru.xmn.filmfilmfilm.servises.data
+package ru.xmn.filmfilmfilm.services.data
 
 class KudaGoShowingsResponse(
         val count: Int,

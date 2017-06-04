@@ -15,7 +15,7 @@ import khronos.toString
 import kotlinx.android.synthetic.main.fragment_days.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.inflate
-import ru.xmn.filmfilmfilm.screens.main.onedayfilms.FilmsFragment
+import ru.xmn.filmfilmfilm.screens.main.films.FilmsFragment
 
 class DaysFragment : LifecycleFragment() {
 

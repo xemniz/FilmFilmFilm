@@ -1,16 +1,14 @@
-package ru.xmn.filmfilmfilm.servises
+package ru.xmn.filmfilmfilm.services.omdb
 
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.xmn.filmfilmfilm.servises.data.OmdbResponse
+import ru.xmn.filmfilmfilm.services.data.OmdbResponse
 
-interface OmdbService {
+interface TmdbService {
 
     @GET("/")
     fun getMovieInfo(
             @Query("i") imdbId: String)
             : Observable<OmdbResponse>
-
-//    http://www.omdbapi.com/?i=tt1172570
 }

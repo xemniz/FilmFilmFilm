@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">FilmFilmFilm</string>
+    <string name="transition_poster">transition_poster</string>
+    <string name="transition_posterCard">transition_posterCard</string>
+    <string name="transition_film_description">transition_film_description</string>
 </resources>

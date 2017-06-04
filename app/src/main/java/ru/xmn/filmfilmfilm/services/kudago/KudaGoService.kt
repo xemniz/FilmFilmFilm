@@ -1,7 +1,7 @@
-package ru.xmn.filmfilmfilm.servises
+package ru.xmn.filmfilmfilm.services.kudago
 
-import ru.xmn.filmfilmfilm.servises.data.KudaGoMoviesResponse
-import ru.xmn.filmfilmfilm.servises.data.KudaGoShowingsResponse
+import ru.xmn.filmfilmfilm.services.data.KudaGoMoviesResponse
+import ru.xmn.filmfilmfilm.services.data.KudaGoShowingsResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
