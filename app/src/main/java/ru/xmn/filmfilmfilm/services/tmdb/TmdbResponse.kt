@@ -4,7 +4,7 @@ package ru.xmn.filmfilmfilm.services.tmdb
 class TmdbMovieInfo(
         val adult: Boolean,
         val backdrop_path: String?,
-        val belongs_to_collection: List<TmdbCollection>?,
+        val belongs_to_collection: TmdbCollection?,
         val budget: Int,
         val genres: List<Genre>,
         val homepage: String,
@@ -47,8 +47,8 @@ class TmdbLanguage(
 class TmdbCollection(
         val id: Int?,
         val name: String?,
-        val posterPath: String?,
-        val backdropPath: String?
+        val poster_path: String?,
+        val backdrop_path: String?
 )
 
 class Cast(

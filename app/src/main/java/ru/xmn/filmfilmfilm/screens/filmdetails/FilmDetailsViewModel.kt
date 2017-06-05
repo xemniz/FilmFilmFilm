@@ -8,6 +8,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import ru.xmn.filmfilmfilm.application.App
 import ru.xmn.filmfilmfilm.screens.filmdetails.di.FilmDetailsModule
+import ru.xmn.filmfilmfilm.services.omdb.OmdbFilm
+import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbCredits
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbMovieInfo
 import javax.inject.Inject
@@ -16,7 +18,7 @@ class FilmDetailsViewModel(application: Application?, val imdbId: String) : View
     @Inject
     lateinit var provider: FilmDetailsProvider
 
-    val filminfo = MutableLiveData<Pair<TmdbMovieInfo, TmdbCredits>>()
+    val filminfo = MutableLiveData<Triple<TmdbMovieInfo, TmdbCredits, OmdbResponse>>()
 
     init {
         App.component.plus(FilmDetailsModule()).inject(this)
@@ -24,7 +26,8 @@ class FilmDetailsViewModel(application: Application?, val imdbId: String) : View
     }
 
     private fun loadFilmInfo() {
-        provider.getTmdbMovieInfo(imdbId).subscribeOn(Schedulers.io())
+        provider.getTmdbMovieInfo(imdbId)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ filminfo.value = it })
     }

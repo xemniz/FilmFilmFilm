@@ -12,7 +12,7 @@ import javax.inject.Inject
 @FragmentScope
 class FilmsProvider @Inject
 constructor(val kudaGo: KudaGoManager, val omdb: OmdbManager) {
-    fun getMovies(addDays: Int = 0): Single<MutableList<FilmItemViewData>>? =
+    fun getMovies(addDays: Int = 0): Single<MutableList<FilmItemViewData>> =
             kudaGo.getMovies(addDays)
             .flatMap {
                 Observable.fromIterable(it.results)

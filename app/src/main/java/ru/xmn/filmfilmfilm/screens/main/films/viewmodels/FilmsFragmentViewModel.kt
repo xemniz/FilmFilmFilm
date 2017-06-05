@@ -26,9 +26,9 @@ class FilmsFragmentViewModel(application: Application?, val daysOffset: Int) : A
     }
 
     fun loadMovies() {
-        filmsProvider.getMovies(daysOffset)!!.subscribeOn(Schedulers.io())
+        filmsProvider.getMovies(daysOffset).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(Consumer { films.value = it }, Consumer { it.printStackTrace() })
+                .subscribe({ films.value = it }, { it.printStackTrace() })
     }
 
     class Factory(val application: Application?, val daysOffset: Int) : ViewModelProvider.NewInstanceFactory() {

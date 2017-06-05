@@ -11,6 +11,7 @@ import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.activity_film_details.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.loadUrl
+import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbCredits
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbMovieInfo
 import java.lang.Exception
@@ -41,15 +42,16 @@ class FilmDetailsActivity : LifecycleActivity() {
     }
 
     private fun subscribeToModel(model: FilmDetailsViewModel) {
-
         model.filminfo.observe(this, Observer { it?.let { bindUi(it) } })
     }
 
-    private fun bindUi(it: Pair<TmdbMovieInfo, TmdbCredits>) {
-        val (info, credits) = it
+    private fun bindUi(it: Triple<TmdbMovieInfo, TmdbCredits, OmdbResponse>) {
+        val (info, credits, ratings) = it
         filmName.text = info.title
         genres.text = info.genres.map { it.name }.joinToString()
         info_view.text = info.overview
+        ratings_info.text = ratings.Ratings.associateBy({ it.Source }, { it.Value })
+                .map { "${it.key}: ${it.value}" }.joinToString(separator = " | ")
         val url = "https://image.tmdb.org/t/p/w500${info.backdrop_path}"
         expandedImage.loadUrl(url)
     }

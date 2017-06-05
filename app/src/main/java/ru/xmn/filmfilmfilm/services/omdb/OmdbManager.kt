@@ -14,23 +14,34 @@ class OmdbManager(private val service: OmdbService) {
         val imdbid: String? = movie.imdbId
         return when (imdbid) {
             null -> Observable.just(ABSENT)
-            else -> Observable.concat(getOmdbInfoLocal(imdbid, movie), getOmdbInfoNetwork(imdbid, movie)).first(ABSENT).toObservable()
+            else -> Observable.concat(getOmdbInfoLocalWithMovie(imdbid, movie), getOmdbInfoNetworkWithMovie(imdbid, movie)).first(ABSENT).toObservable()
         }
     }
 
-    private fun getOmdbInfoLocal(imdbid: String, movie: Movie): Observable<Pair<Movie, OmdbResponse?>> =
-            Observable.fromCallable {
-                OmdbFilm().query { it.equalTo("imdbID", imdbid) }
-            }
-                    .flatMap { Observable.fromIterable(it) }
-                    .firstElement()
-                    .map { Pair<Movie, OmdbResponse?>(movie, it.toModel()) }
-                    .toObservable()
+    fun getOmdbInfo(imdbid: String): Observable<OmdbResponse> {
+        return Observable.concat(getOmdbInfoLocal(imdbid), getOmdbInfoNetwork(imdbid)).first(OmdbResponse(emptyList(), imdbid)).toObservable()
+    }
 
-    private fun getOmdbInfoNetwork(imdbid: String, movie: Movie): Observable<Pair<Movie, OmdbResponse?>> =
-            service.getMovieInfo(imdbid)
-                    .doOnNext { it.toRealm().save() }
+    private fun getOmdbInfoLocalWithMovie(imdbid: String, movie: Movie): Observable<Pair<Movie, OmdbResponse?>> =
+            getOmdbInfoLocal(imdbid)
+                    .map { Pair<Movie, OmdbResponse?>(movie, it) }
+
+    private fun getOmdbInfoLocal(imdbid: String): Observable<OmdbResponse> {
+        return Observable.fromCallable {
+            OmdbFilm().query { it.equalTo("imdbID", imdbid) }
+        }
+                .flatMap { Observable.fromIterable(it) }
+                .firstElement()
+                .toObservable()
+                .map { it.toModel() }
+    }
+
+    private fun getOmdbInfoNetworkWithMovie(imdbid: String, movie: Movie): Observable<Pair<Movie, OmdbResponse?>> =
+            getOmdbInfoNetwork(imdbid)
                     .map { Pair<Movie, OmdbResponse?>(movie, it) }
                     .onErrorReturnItem(Pair<Movie, OmdbResponse?>(movie, null))
                     .subscribeOn(Schedulers.io())
+
+    private fun getOmdbInfoNetwork(imdbid: String) = service.getMovieInfo(imdbid)
+            .doOnNext { it.toRealm().save() }
 }
