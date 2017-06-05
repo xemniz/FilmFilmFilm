@@ -3,7 +3,10 @@ package ru.xmn.filmfilmfilm.services.data
 import org.junit.Assert
 import org.junit.Test
 
-import org.junit.Assert.*
+import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
+import ru.xmn.filmfilmfilm.services.omdb.Rating
+import ru.xmn.filmfilmfilm.services.omdb.toModel
+import ru.xmn.filmfilmfilm.services.omdb.toRealm
 
 /**
  * Created by USER on 26.05.2017.

@@ -45,7 +45,5 @@ class App : Application() {
         component = DaggerApplicationComponent.builder()
                 .applicationModule(ApplicationModule(this))
                 .build()
-
-        component.serviceTree().createRootNode(TAG).bindService(DAGGER_COMPONENT, component)
     }
 }

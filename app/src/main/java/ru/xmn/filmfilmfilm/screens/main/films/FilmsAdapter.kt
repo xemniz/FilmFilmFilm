@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.ui.adapter.AutoUpdatableAdapter
 import ru.xmn.filmfilmfilm.common.inflate
-import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmItemViewModel
+import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmItemViewData
 import kotlin.properties.Delegates
 import kotlinx.android.synthetic.main.film_item.view.*
 import ru.xmn.filmfilmfilm.common.loadUrl
@@ -21,7 +21,7 @@ import ru.xmn.filmfilmfilm.screens.filmdetails.FilmDetailsActivity
 
 class FilmsAdapter(val activity: FragmentActivity) : RecyclerView.Adapter<FilmsAdapter.ViewHolder>(), AutoUpdatableAdapter {
 
-    var items: List<FilmItemViewModel> by Delegates.observable(emptyList()) {
+    var items: List<FilmItemViewData> by Delegates.observable(emptyList()) {
         _, old, new ->
         autoNotify(old, new) { o, n -> o == n }
     }
@@ -37,7 +37,7 @@ class FilmsAdapter(val activity: FragmentActivity) : RecyclerView.Adapter<FilmsA
     }
 
     class ViewHolder(view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
-        fun bind(film: FilmItemViewModel) {
+        fun bind(film: FilmItemViewData) {
             itemView.apply {
                 poster.loadUrl(film.image)
                 filmName.text = film.title

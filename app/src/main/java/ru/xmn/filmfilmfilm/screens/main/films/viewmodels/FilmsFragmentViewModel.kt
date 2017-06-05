@@ -12,11 +12,10 @@ import ru.xmn.filmfilmfilm.application.App
 import ru.xmn.filmfilmfilm.screens.main.MainActivityModule
 import ru.xmn.filmfilmfilm.screens.main.films.FilmsProvider
 import ru.xmn.filmfilmfilm.screens.main.films.di.FilmsModule
-import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmItemViewModel
 import javax.inject.Inject
 
 class FilmsFragmentViewModel(application: Application?, val daysOffset: Int) : AndroidViewModel(application) {
-    val films = MutableLiveData<List<FilmItemViewModel>>()
+    val films = MutableLiveData<List<FilmItemViewData>>()
 
     @Inject
     lateinit var filmsProvider: FilmsProvider

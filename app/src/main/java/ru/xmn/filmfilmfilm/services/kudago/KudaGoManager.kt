@@ -3,7 +3,6 @@ package ru.xmn.filmfilmfilm.services.kudago
 import io.reactivex.Observable
 import khronos.*
 import ru.xmn.filmfilmfilm.common.timeStamp
-import ru.xmn.filmfilmfilm.services.data.KudaGoMoviesResponse
 
 class KudaGoManager(private val service: KudaGoService){
 

@@ -1,4 +1,4 @@
-package ru.xmn.filmfilmfilm.services.data
+package ru.xmn.filmfilmfilm.services.omdb
 
 import com.squareup.moshi.Moshi
 import io.realm.RealmObject

@@ -4,7 +4,8 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import ru.xmn.filmfilmfilm.common.realmext.query
 import ru.xmn.filmfilmfilm.common.realmext.save
-import ru.xmn.filmfilmfilm.services.data.*
+import ru.xmn.filmfilmfilm.services.imdbId
+import ru.xmn.filmfilmfilm.services.kudago.Movie
 
 class OmdbManager(private val service: OmdbService) {
 

@@ -1,11 +1,13 @@
 package ru.xmn.filmfilmfilm.application.di
 
-import com.zhuinden.servicetree.ServiceTree
 import dagger.Component
+import ru.xmn.filmfilmfilm.screens.filmdetails.di.FilmDetailsComponent
+import ru.xmn.filmfilmfilm.screens.filmdetails.di.FilmDetailsModule
 import ru.xmn.filmfilmfilm.screens.main.MainActivityComponent
 import ru.xmn.filmfilmfilm.screens.main.MainActivityModule
 import ru.xmn.filmfilmfilm.services.kudago.KudaGoModule
 import ru.xmn.filmfilmfilm.services.omdb.OmdbModule
+import ru.xmn.filmfilmfilm.services.omdb.TmdbModule
 import javax.inject.Singleton
 
 @Singleton
@@ -13,9 +15,10 @@ import javax.inject.Singleton
         ApplicationModule::class,
         NetworkModule::class,
         OmdbModule::class,
+        TmdbModule::class,
         KudaGoModule::class
 ))
 interface ApplicationComponent {
-    fun serviceTree(): ServiceTree
     fun plus(mainActivityModule: MainActivityModule): MainActivityComponent
+    fun plus(mainActivityModule: FilmDetailsModule): FilmDetailsComponent
 }

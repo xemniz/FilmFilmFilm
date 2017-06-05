@@ -22,7 +22,9 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
 }
 
 fun ImageView.loadUrl(url: String) {
-    Glide.with(context).load(url).into(this)
+    Glide.with(context)
+            .load(url)
+            .into(this)
 }
 
 fun Date.timeStamp(): Long = this.time / 1000

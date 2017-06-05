@@ -3,9 +3,7 @@ package ru.xmn.filmfilmfilm.screens.main.films
 import android.arch.lifecycle.LifecycleFragment
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +11,8 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_one_day_films.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.inflate
-import ru.xmn.filmfilmfilm.screens.main.MainActivity
-import ru.xmn.filmfilmfilm.screens.main.films.FilmsAdapter
-import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmItemViewModel
+import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmItemViewData
 import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmsFragmentViewModel
-import javax.inject.Inject
 
 class FilmsFragment : LifecycleFragment() {
 
@@ -33,7 +28,7 @@ class FilmsFragment : LifecycleFragment() {
         }
     }
 
-    fun showMovies(films: List<FilmItemViewModel>) {
+    fun showMovies(films: List<FilmItemViewData>) {
         (movieList.adapter as FilmsAdapter).items = films
     }
 

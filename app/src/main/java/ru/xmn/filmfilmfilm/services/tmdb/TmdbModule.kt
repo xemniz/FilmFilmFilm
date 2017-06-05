@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class TmdbModule {
     @Provides @Singleton @Named("tmdb")
     fun provideRestAdapterTmdb(client: OkHttpClient): Retrofit
-            = provideRestAdapter(client.addParameterInterceptor("api_key", Config.OMDB_API_KEY), "https://api.themoviedb.org/")
+            = provideRestAdapter(client.addParameterInterceptor("api_key", Config.TMDB_API_KEY), "https://api.themoviedb.org/")
 
 
     @Provides @Singleton
@@ -22,6 +22,5 @@ class TmdbModule {
             = retrofit.create(TmdbService::class.java)
 
     @Provides @Singleton
-    fun providesTmdbManager(service: TmdbService): TmdbManager
-            = TmdbManager(service)
+    fun providesTmdbManager(service: TmdbService): TmdbManager = TmdbManager(service)
 }

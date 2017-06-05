@@ -24,6 +24,5 @@ class OmdbModule {
             = retrofit.create(OmdbService::class.java)
 
     @Provides @Singleton
-    fun providesOmdbManager(service: OmdbService): OmdbManager
-            = OmdbManager(service)
+    fun providesOmdbManager(service: OmdbService): OmdbManager = OmdbManager(service)
 }
