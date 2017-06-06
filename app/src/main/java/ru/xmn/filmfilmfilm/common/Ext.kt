@@ -1,6 +1,7 @@
 package ru.xmn.filmfilmfilm.common
 
 import android.support.annotation.LayoutRes
+import android.transition.Transition
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,9 @@ import java.lang.reflect.Type
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }
+
+fun Transition.delay(i: Long): Transition {this.startDelay = i; return this}
+fun Transition.dur(i: Long): Transition {this.duration = i; return this}
 
 fun ImageView.loadUrl(url: String) {
     Glide.with(context)

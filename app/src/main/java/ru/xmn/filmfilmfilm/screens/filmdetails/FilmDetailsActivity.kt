@@ -1,10 +1,12 @@
 package ru.xmn.filmfilmfilm.screens.filmdetails
 
+import android.app.SharedElementCallback
 import android.arch.lifecycle.LifecycleActivity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.transition.Fade
+import android.transition.*
+import android.transition.TransitionSet.ORDERING_TOGETHER
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
@@ -19,8 +21,9 @@ import ru.xmn.filmfilmfilm.services.tmdb.TmdbMovieInfo
 import java.lang.Exception
 import android.view.animation.AnimationUtils
 import android.view.Gravity
-import android.transition.Slide
-import android.transition.TransitionSet
+import android.view.View
+import ru.xmn.filmfilmfilm.common.delay
+import ru.xmn.filmfilmfilm.common.dur
 
 
 class FilmDetailsActivity : LifecycleActivity() {
@@ -37,14 +40,40 @@ class FilmDetailsActivity : LifecycleActivity() {
         setContentView(R.layout.activity_film_details)
         postponeEnterTransition()
 
-        val transitions = TransitionSet()
-        val slide = Slide(Gravity.TOP)
-        slide.interpolator = AnimationUtils.loadInterpolator(this,
-                android.R.interpolator.linear_out_slow_in)
-        slide.duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
-        transitions.addTransition(slide)
-        transitions.addTransition(Fade())
-        window.enterTransition = transitions
+//        val transitions = TransitionSet()
+//        val slide = Slide(Gravity.TOP)
+//        slide.interpolator = AnimationUtils.loadInterpolator(this,
+//                android.R.interpolator.linear_out_slow_in)
+//        slide.duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+//        transitions.addTransition(slide)
+//        transitions.addTransition(Fade())
+//        transitions.addTarget(main_appbar)
+//        window.enterTransition = transitions
+
+        setEnterSharedElementCallback(object : SharedElementCallback() {
+            override fun onSharedElementEnd(sharedElementNames: MutableList<String>?, sharedElements: MutableList<View>?, sharedElementSnapshots: MutableList<View>?) {
+                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
+                val visible = description_container.visibility == View.VISIBLE
+
+                val set = TransitionSet()
+
+                if (visible) {
+                    set.addTransition(Fade().dur(50))
+                } else {
+                    set.addTransition(Fade().delay(200).dur(200))
+                    set.addTransition(Slide(Gravity.BOTTOM).dur(400))
+                }
+
+                set.ordering = ORDERING_TOGETHER
+
+                TransitionManager.beginDelayedTransition(description_container, set)
+
+                if (visible)
+                    description_container.visibility = View.INVISIBLE
+                else
+                    description_container.visibility = View.VISIBLE
+            }
+        })
 
         chromeFader = ElasticDragDismissCoordinatorLayout.SystemChromeFader(this)
 
