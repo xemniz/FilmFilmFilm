@@ -19,7 +19,7 @@ class TmdbMovieInfo(
         val productionCountries: List<TmdbLanguage>,
         val releaseDate: String,
         val revenue: Int,
-        val runtime: Int,
+        val runtime: Int?,
         val spoken_languages: List<TmdbLanguage>,
         val status: String,
         val tagline: String,

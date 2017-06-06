@@ -59,7 +59,7 @@ class FilmsFragment : LifecycleFragment() {
     }
 
     fun subscribeToModel(model: FilmsFragmentViewModel) {
-        model.films.observe(this, Observer({ (movieList.adapter as FilmsAdapter).items = it ?: listOf() }))
+        model.films.observe(this, Observer({ (movieList?.adapter as FilmsAdapter).items = it ?: listOf() }))
     }
 
 }

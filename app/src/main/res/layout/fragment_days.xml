@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorHeight="0dp"
         app:tabMode="scrollable"
+        android:transitionName="@string/transition_tabs"
         android:background="@color/colorPrimary">
 
     </ru.xmn.filmfilmfilm.common.views.FilmTabLayout>
