@@ -19,8 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".screens.filmdetails.FilmDetailsActivity"
-                  android:theme="@style/FilmFilmFilm.Translucent" >
+        <activity
+            android:name=".screens.filmdetails.FilmDetailsActivity"
+            android:theme="@style/FilmFilmFilm.Translucent">
+        </activity>
+        <activity android:name=".screens.PersonDetailsActivity">
         </activity>
     </application>
 

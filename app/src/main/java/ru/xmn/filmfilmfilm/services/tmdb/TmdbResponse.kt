@@ -1,5 +1,12 @@
 package ru.xmn.filmfilmfilm.services.tmdb
 
+class TmdbDiscoverResponse(
+        var page: Int?,
+        var results: List<TmdbMovieInfo>?,
+        var total_results: Int?,
+        var total_pages: Int?
+)
+
 
 class TmdbMovieInfo(
         val adult: Boolean,

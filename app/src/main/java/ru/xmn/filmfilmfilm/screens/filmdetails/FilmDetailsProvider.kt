@@ -4,7 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import ru.xmn.filmfilmfilm.application.di.scopes.ActivityScope
 import ru.xmn.filmfilmfilm.services.omdb.OmdbManager
-import ru.xmn.filmfilmfilm.services.omdb.TmdbManager
+import ru.xmn.filmfilmfilm.services.tmdb.TmdbManager
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbCredits
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbMovieInfo
 import javax.inject.Inject
