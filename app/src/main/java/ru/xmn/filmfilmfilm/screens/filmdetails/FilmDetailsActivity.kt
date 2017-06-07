@@ -5,27 +5,29 @@ import android.arch.lifecycle.LifecycleActivity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
-import android.transition.*
+import android.transition.Fade
+import android.transition.Slide
+import android.transition.TransitionManager
+import android.transition.TransitionSet
 import android.transition.TransitionSet.ORDERING_TOGETHER
-import android.util.Log
+import android.view.Gravity
+import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.activity_film_details.*
 import ru.xmn.filmfilmfilm.R
+import ru.xmn.filmfilmfilm.common.delay
+import ru.xmn.filmfilmfilm.common.dur
 import ru.xmn.filmfilmfilm.common.loadUrl
 import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissCoordinatorLayout
 import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbCredits
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbMovieInfo
 import java.lang.Exception
-import android.view.Gravity
-import android.view.View
-import kotlinx.android.synthetic.main.activity_main.*
-import ru.xmn.filmfilmfilm.common.delay
-import ru.xmn.filmfilmfilm.common.dur
 
 
 class FilmDetailsActivity : LifecycleActivity() {
@@ -72,7 +74,7 @@ class FilmDetailsActivity : LifecycleActivity() {
     private fun runEnterAnimation() {
         val set = TransitionSet()
         set.addTransition(Fade().delay(200).dur(200))
-//        set.addTransition(Slide(Gravity.BOTTOM).dur(400))
+        set.addTransition(Slide(Gravity.BOTTOM).dur(400))
         set.ordering = ORDERING_TOGETHER
         TransitionManager.beginDelayedTransition(description_container, set)
         description_container.visibility = View.VISIBLE
@@ -106,12 +108,13 @@ class FilmDetailsActivity : LifecycleActivity() {
         val url = "https://image.tmdb.org/t/p/w500${info.backdrop_path}"
         expandedImage.loadUrl(url)
 
-        cast.layoutManager = LinearLayoutManager(this)
-        crew.layoutManager = LinearLayoutManager(this)
-        cast.adapter = PeoplesAdapter().also { it.items = credits.cast?.filter { it.name != null }?.map { PeoplesAdapter.PersonItem(it.name!!, it.character ?: "") }?.take(7) ?: emptyList() }
-        crew.adapter = PeoplesAdapter().also { it.items = credits.crew?.filter { it.name != null }?.map { PeoplesAdapter.PersonItem(it.name!!, it.job ?: "") }?.take(7) ?: emptyList() }
-        content.fullScroll(View.FOCUS_UP)
-        content.scrollTo(0,0)
+        //todo kostyl (без дилея контент скроллится вниз)
+        Handler().postDelayed({
+            cast.layoutManager = LinearLayoutManager(this)
+            crew.layoutManager = LinearLayoutManager(this)
+            cast.adapter = PeoplesAdapter().also { it.items = credits.cast?.filter { it.name != null }?.map { PeoplesAdapter.PersonItem(it.name!!, it.character ?: "") }?.take(7) ?: emptyList() }
+            crew.adapter = PeoplesAdapter().also { it.items = credits.crew?.filter { it.name != null }?.map { PeoplesAdapter.PersonItem(it.name!!, it.job ?: "") }?.take(7) ?: emptyList() }
+        }, 300)
     }
 
     private fun loadPosterThenStartTransition(posterUrl: String?) {
