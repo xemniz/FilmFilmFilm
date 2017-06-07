@@ -28,13 +28,9 @@ class FilmsAdapter(val activity: FragmentActivity) : RecyclerView.Adapter<FilmsA
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position])
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(parent.inflate(R.layout.film_item), activity)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.film_item), activity)
 
     class ViewHolder(view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
         fun bind(film: FilmItemViewData) {
@@ -48,7 +44,6 @@ class FilmsAdapter(val activity: FragmentActivity) : RecyclerView.Adapter<FilmsA
                     val intent = Intent(this@ViewHolder.itemView.context, FilmDetailsActivity::class.java)
                     val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
                             Pair<View, String>(infoCard, ViewCompat.getTransitionName(infoCard)),
-//                            Pair<View, String>(fragment.view?.findViewById(R.id.tabLayout), ViewCompat.getTransitionName(fragment.view?.findViewById(R.id.tabLayout))),
                             Pair<View, String>(posterCard, ViewCompat.getTransitionName(posterCard)))
                     intent.putExtra(FilmDetailsActivity.POSTER_KEY, film.image)
                     intent.putExtra(FilmDetailsActivity.FILM_IMDB_ID_KEY, film.imdbId)

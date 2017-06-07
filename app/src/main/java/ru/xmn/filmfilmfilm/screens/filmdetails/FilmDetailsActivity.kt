@@ -5,8 +5,10 @@ import android.arch.lifecycle.LifecycleActivity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.transition.*
 import android.transition.TransitionSet.ORDERING_TOGETHER
+import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
 import com.bumptech.glide.request.RequestListener
@@ -19,9 +21,9 @@ import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbCredits
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbMovieInfo
 import java.lang.Exception
-import android.view.animation.AnimationUtils
 import android.view.Gravity
 import android.view.View
+import kotlinx.android.synthetic.main.activity_main.*
 import ru.xmn.filmfilmfilm.common.delay
 import ru.xmn.filmfilmfilm.common.dur
 
@@ -40,38 +42,16 @@ class FilmDetailsActivity : LifecycleActivity() {
         setContentView(R.layout.activity_film_details)
         postponeEnterTransition()
 
-//        val transitions = TransitionSet()
-//        val slide = Slide(Gravity.TOP)
-//        slide.interpolator = AnimationUtils.loadInterpolator(this,
-//                android.R.interpolator.linear_out_slow_in)
-//        slide.duration = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
-//        transitions.addTransition(slide)
-//        transitions.addTransition(Fade())
-//        transitions.addTarget(main_appbar)
-//        window.enterTransition = transitions
-
         setEnterSharedElementCallback(object : SharedElementCallback() {
             override fun onSharedElementEnd(sharedElementNames: MutableList<String>?, sharedElements: MutableList<View>?, sharedElementSnapshots: MutableList<View>?) {
                 super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
                 val visible = description_container.visibility == View.VISIBLE
 
-                val set = TransitionSet()
-
                 if (visible) {
-                    set.addTransition(Fade().dur(50))
+                    runExitAnimation()
                 } else {
-                    set.addTransition(Fade().delay(200).dur(200))
-                    set.addTransition(Slide(Gravity.BOTTOM).dur(400))
+                    runEnterAnimation()
                 }
-
-                set.ordering = ORDERING_TOGETHER
-
-                TransitionManager.beginDelayedTransition(description_container, set)
-
-                if (visible)
-                    description_container.visibility = View.INVISIBLE
-                else
-                    description_container.visibility = View.VISIBLE
             }
         })
 
@@ -87,6 +67,19 @@ class FilmDetailsActivity : LifecycleActivity() {
 
         subscribeToModel(model)
         loadPosterThenStartTransition(posterUrl)
+    }
+
+    private fun runEnterAnimation() {
+        val set = TransitionSet()
+        set.addTransition(Fade().delay(200).dur(200))
+//        set.addTransition(Slide(Gravity.BOTTOM).dur(400))
+        set.ordering = ORDERING_TOGETHER
+        TransitionManager.beginDelayedTransition(description_container, set)
+        description_container.visibility = View.VISIBLE
+    }
+
+    private fun runExitAnimation() {
+        description_container.visibility = View.INVISIBLE
     }
 
     override fun onResume() {
@@ -112,6 +105,13 @@ class FilmDetailsActivity : LifecycleActivity() {
                 .map { "${it.key}: ${it.value}" }.joinToString(separator = " | ")
         val url = "https://image.tmdb.org/t/p/w500${info.backdrop_path}"
         expandedImage.loadUrl(url)
+
+        cast.layoutManager = LinearLayoutManager(this)
+        crew.layoutManager = LinearLayoutManager(this)
+        cast.adapter = PeoplesAdapter().also { it.items = credits.cast?.filter { it.name != null }?.map { PeoplesAdapter.PersonItem(it.name!!, it.character ?: "") }?.take(7) ?: emptyList() }
+        crew.adapter = PeoplesAdapter().also { it.items = credits.crew?.filter { it.name != null }?.map { PeoplesAdapter.PersonItem(it.name!!, it.job ?: "") }?.take(7) ?: emptyList() }
+        content.fullScroll(View.FOCUS_UP)
+        content.scrollTo(0,0)
     }
 
     private fun loadPosterThenStartTransition(posterUrl: String?) {
