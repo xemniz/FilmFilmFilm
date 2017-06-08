@@ -28,9 +28,6 @@ class App : Application() {
         var configBuilder: RealmConfiguration.Builder = RealmConfiguration.Builder()
                 .schemaVersion(1)
 
-        // IMPORTANT:
-        // While we're developing, any change in Realm will automatically reset the database.
-        // Be careful!
         if (BuildConfig.DEBUG)
             configBuilder = configBuilder.deleteRealmIfMigrationNeeded()
 

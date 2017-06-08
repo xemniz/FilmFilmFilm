@@ -46,7 +46,7 @@ class FilmsAdapter(val activity: FragmentActivity) : RecyclerView.Adapter<FilmsA
                             Pair<View, String>(infoCard, ViewCompat.getTransitionName(infoCard)),
                             Pair<View, String>(posterCard, ViewCompat.getTransitionName(posterCard)))
                     intent.putExtra(FilmDetailsActivity.POSTER_KEY, film.image)
-                    intent.putExtra(FilmDetailsActivity.FILM_IMDB_ID_KEY, film.imdbId)
+                    intent.putExtra(FilmDetailsActivity.FILM_ID_FOR_TMDB_KEY, film.imdbId?:film.tmdbId)
                     startActivity(this@ViewHolder.itemView.context, intent, options.toBundle())
                 }
             }

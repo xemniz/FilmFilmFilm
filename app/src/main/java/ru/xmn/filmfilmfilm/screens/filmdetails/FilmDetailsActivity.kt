@@ -25,8 +25,10 @@ import ru.xmn.filmfilmfilm.common.dur
 import ru.xmn.filmfilmfilm.common.loadUrl
 import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissCoordinatorLayout
 import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
+import ru.xmn.filmfilmfilm.services.tmdb.PersonType
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbCredits
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbMovieInfo
+import ru.xmn.filmfilmfilm.services.tmdb.pathToUrl
 import java.lang.Exception
 
 
@@ -34,7 +36,7 @@ class FilmDetailsActivity : LifecycleActivity() {
 
     companion object {
         val POSTER_KEY = "FilmDetailsActivity.Poster"
-        val FILM_IMDB_ID_KEY = "FilmDetailsActivity.Film"
+        val FILM_ID_FOR_TMDB_KEY = "FilmDetailsActivity.Film"
     }
 
     lateinit private var chromeFader: ElasticDragDismissCoordinatorLayout.ElasticDragDismissCallback
@@ -60,7 +62,7 @@ class FilmDetailsActivity : LifecycleActivity() {
         chromeFader = ElasticDragDismissCoordinatorLayout.SystemChromeFader(this)
 
         val posterUrl = intent.getStringExtra(POSTER_KEY)
-        val filmImdbId = intent.getStringExtra(FILM_IMDB_ID_KEY)
+        val filmImdbId = intent.getStringExtra(FILM_ID_FOR_TMDB_KEY)
 
         val factory = FilmDetailsViewModel.Factory(
                 application, filmImdbId)
@@ -105,15 +107,14 @@ class FilmDetailsActivity : LifecycleActivity() {
         info_view.text = info.overview
         ratings_info.text = ratings.Ratings.associateBy({ it.Source }, { it.Value })
                 .map { "${it.key}: ${it.value}" }.joinToString(separator = " | ")
-        val url = "https://image.tmdb.org/t/p/w500${info.backdrop_path}"
-        expandedImage.loadUrl(url)
+        expandedImage.loadUrl(info.backdrop_path.pathToUrl())
 
         //todo kostyl (без дилея контент скроллится вниз)
         Handler().postDelayed({
             cast.layoutManager = LinearLayoutManager(this)
             crew.layoutManager = LinearLayoutManager(this)
-            cast.adapter = PeoplesAdapter().also { it.items = credits.cast?.filter { it.name != null }?.map { PeoplesAdapter.PersonItem(it.name!!, it.character ?: "") }?.take(7) ?: emptyList() }
-            crew.adapter = PeoplesAdapter().also { it.items = credits.crew?.filter { it.name != null }?.map { PeoplesAdapter.PersonItem(it.name!!, it.job ?: "") }?.take(7) ?: emptyList() }
+            cast.adapter = PersonsAdapter(this).also { it.items = credits.cast?.filter { it.name != null }?.map { PersonsAdapter.PersonItem(it.id.toString(), it.name!!, it.character ?: "", PersonType.CAST) }?.take(7) ?: emptyList() }
+            crew.adapter = PersonsAdapter(this).also { it.items = credits.crew?.filter { it.name != null }?.map { PersonsAdapter.PersonItem(it.id.toString(), it.name!!, it.job ?: "", PersonType.CREW) }?.take(7) ?: emptyList() }
         }, 300)
     }
 
