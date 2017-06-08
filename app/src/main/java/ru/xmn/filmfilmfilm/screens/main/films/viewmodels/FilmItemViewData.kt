@@ -8,3 +8,4 @@ data class FilmItemViewData(
         val director: String,
         val genres: List<String>,
         val Ratings: Map<String, String>)
+
