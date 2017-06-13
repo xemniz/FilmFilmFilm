@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import ru.xmn.filmfilmfilm.application.App
 import ru.xmn.filmfilmfilm.screens.main.MainActivityModule
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 class FilmsFragmentViewModel(application: Application?, val daysOffset: Int) : AndroidViewModel(application) {
     val filmIds = MutableLiveData<List<String?>>()
-    val films = MediatorLiveData<List<FilmData>>()
+    val films = MediatorLiveData<OrderedRealmCollection<FilmData>>()
     init {
         films.addSource(filmIds) {
             Realm.getDefaultInstance().where(FilmData::class.java)

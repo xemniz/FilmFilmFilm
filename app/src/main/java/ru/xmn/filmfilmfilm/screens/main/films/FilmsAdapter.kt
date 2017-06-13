@@ -9,6 +9,8 @@ import android.support.v4.view.ViewCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import io.realm.OrderedRealmCollection
+import io.realm.RealmRecyclerViewAdapter
 import kotlinx.android.synthetic.main.film_item.view.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.inflate
@@ -19,21 +21,15 @@ import ru.xmn.filmfilmfilm.services.film.FilmData
 import kotlin.properties.Delegates
 
 
-class FilmsAdapter(val activity: FragmentActivity) : RecyclerView.Adapter<FilmsAdapter.ViewHolder>(), AutoUpdatableAdapter {
+class FilmsAdapter(val activity: FragmentActivity, data: OrderedRealmCollection<FilmData>) : RealmRecyclerViewAdapter<FilmData, FilmsAdapter.ViewHolder>(data, true) {
 
-    var items: List<FilmData> by Delegates.observable(emptyList()) {
-        _, old, new ->
-        autoNotify(old, new) { o, n -> o == n }
-    }
-
-    override fun getItemCount() = items.size
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position))
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.film_item), activity)
 
     class ViewHolder(view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
-        fun bind(film: FilmData) {
+        fun bind(film: FilmData?) {
+            if (film == null) return
             itemView.apply {
                 film.image?.let { poster.loadUrl(it) }
                 filmName.text = film.title

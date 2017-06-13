@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.realm.OrderedRealmCollection
 import kotlinx.android.synthetic.main.fragment_one_day_films.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.inflate
@@ -28,10 +29,6 @@ class FilmsFragment : LifecycleFragment() {
         }
     }
 
-    fun showMovies(films: List<FilmData>) {
-        (movieList.adapter as FilmsAdapter).items = films
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(R.layout.fragment_one_day_films)
         return view
@@ -41,7 +38,6 @@ class FilmsFragment : LifecycleFragment() {
         super.onViewCreated(view, savedInstanceState)
         movieList?.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = FilmsAdapter(this@FilmsFragment.activity)
         }
     }
 
@@ -59,7 +55,11 @@ class FilmsFragment : LifecycleFragment() {
     }
 
     fun subscribeToModel(model: FilmsFragmentViewModel) {
-        model.films.observe(this, Observer({ (movieList?.adapter as FilmsAdapter).items = it ?: listOf() }))
+        model.films.observe(this, Observer({ it?.let { it1 -> showMovies(it1) } }))
+    }
+
+    fun showMovies(films: OrderedRealmCollection<FilmData>) {
+        movieList.adapter = FilmsAdapter(activity, films)
     }
 
 }

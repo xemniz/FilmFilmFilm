@@ -21,7 +21,6 @@ class PersonDetailsActivity : LifecycleActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_person_detail)
         person_films.layoutManager = LinearLayoutManager(this)
-        person_films.adapter = FilmsAdapter(this)
 
         val personId = intent.getStringExtra(PERSON_ID)
         val personType = intent.getSerializableExtra(PERSON_TYPE) as PersonType
@@ -35,7 +34,7 @@ class PersonDetailsActivity : LifecycleActivity() {
     }
 
     private fun subscribeToModel(model: PersonDetailsViewModel) {
-        model.films.observe(this, Observer{(person_films.adapter as FilmsAdapter).items = it?: emptyList()})
+        model.films.observe(this, Observer{person_films.adapter = it?.let { it1 -> FilmsAdapter(this, it1) } })
     }
 }
 

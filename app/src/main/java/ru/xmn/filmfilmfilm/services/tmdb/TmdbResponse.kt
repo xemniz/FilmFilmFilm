@@ -16,7 +16,7 @@ class TmdbMovieInfo(
         val genres: List<Genre>,
         val homepage: String,
         val id: Int,
-        val imdb_id: String,
+        val imdb_id: String?,
         val originalLanguage: String,
         val originalTitle: String,
         val overview: String,

@@ -20,7 +20,7 @@ constructor(val omdb: OmdbManager, val tmdb: TmdbManager) {
                             Pair<TmdbMovieInfo, TmdbCredits>> { info, credits -> Pair(info, credits) })
                     .flatMap {
                         (info, credits) ->
-                        omdb.getOmdbInfo(info.imdb_id)
+                        omdb.getOmdbInfo(info.imdb_id!!)
                                 .map { Triple(info, credits, it) }
                     }
 }
