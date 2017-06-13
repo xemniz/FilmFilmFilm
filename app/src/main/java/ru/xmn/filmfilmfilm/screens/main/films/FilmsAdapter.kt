@@ -15,13 +15,13 @@ import ru.xmn.filmfilmfilm.common.inflate
 import ru.xmn.filmfilmfilm.common.loadUrl
 import ru.xmn.filmfilmfilm.common.ui.adapter.AutoUpdatableAdapter
 import ru.xmn.filmfilmfilm.screens.filmdetails.FilmDetailsActivity
-import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmItemViewData
+import ru.xmn.filmfilmfilm.services.film.FilmData
 import kotlin.properties.Delegates
 
 
 class FilmsAdapter(val activity: FragmentActivity) : RecyclerView.Adapter<FilmsAdapter.ViewHolder>(), AutoUpdatableAdapter {
 
-    var items: List<FilmItemViewData> by Delegates.observable(emptyList()) {
+    var items: List<FilmData> by Delegates.observable(emptyList()) {
         _, old, new ->
         autoNotify(old, new) { o, n -> o == n }
     }
@@ -33,20 +33,20 @@ class FilmsAdapter(val activity: FragmentActivity) : RecyclerView.Adapter<FilmsA
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.film_item), activity)
 
     class ViewHolder(view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
-        fun bind(film: FilmItemViewData) {
+        fun bind(film: FilmData) {
             itemView.apply {
-                poster.loadUrl(film.image)
+                film.image?.let { poster.loadUrl(it) }
                 filmName.text = film.title
                 director.text = "by ${film.director}"
-                ratings.text = film.Ratings.filter { it.key != "Internet Movie Database" }.map { "${it.key} : ${it.value}" }.joinToString(", ")
-                genres.text = film.genres.joinToString(separator = " | ")
+                ratings.text = film.ratings.filter { it.source != "Internet Movie Database" }.map { "${it.source} : ${it.value}" }.joinToString(", ")
+                genres.text = film.genres.map { it.name }.joinToString(separator = " | ")
                 setOnClickListener {
                     val intent = Intent(this@ViewHolder.itemView.context, FilmDetailsActivity::class.java)
                     val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
                             Pair<View, String>(infoCard, ViewCompat.getTransitionName(infoCard)),
                             Pair<View, String>(posterCard, ViewCompat.getTransitionName(posterCard)))
                     intent.putExtra(FilmDetailsActivity.POSTER_KEY, film.image)
-                    intent.putExtra(FilmDetailsActivity.FILM_ID_FOR_TMDB_KEY, film.imdbId?:film.tmdbId)
+                    intent.putExtra(FilmDetailsActivity.FILM_ID_FOR_TMDB_KEY, film.imdbId ?: film.tmdbId)
                     startActivity(this@ViewHolder.itemView.context, intent, options.toBundle())
                 }
             }

@@ -5,15 +5,13 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import dagger.Module
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import ru.xmn.filmfilmfilm.application.App
-import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmItemViewData
+import ru.xmn.filmfilmfilm.services.film.FilmData
 import ru.xmn.filmfilmfilm.services.tmdb.PersonType
 import javax.inject.Inject
 
 class PersonDetailsViewModel(val application: Application, val personId: String, val personType: PersonType) : ViewModel() {
-    val films = MutableLiveData<List<FilmItemViewData>>()
+    val films = MutableLiveData<List<FilmData>>()
 
     @Inject
     lateinit var filmsProvider: PersonDetailsProvider
@@ -24,10 +22,10 @@ class PersonDetailsViewModel(val application: Application, val personId: String,
     }
 
     fun loadMovies() {
-        filmsProvider.getMoviesForPerson(personType, personId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ films.value = it }, { it.printStackTrace() })
+//        filmsProvider.getMoviesForPerson(personType, personId)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ films.value = it }, { it.printStackTrace() })
     }
 
     class Factory(val application: Application, val personId: String, val personType: PersonType) : ViewModelProvider.Factory {

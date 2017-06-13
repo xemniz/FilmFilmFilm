@@ -3,22 +3,18 @@ package ru.xmn.filmfilmfilm.screens.main.films
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.xmn.filmfilmfilm.application.di.scopes.FragmentScope
-import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmItemViewData
-import ru.xmn.filmfilmfilm.services.createViewData
+import ru.xmn.filmfilmfilm.services.film.FilmDataManager
+import ru.xmn.filmfilmfilm.services.imdbId
 import ru.xmn.filmfilmfilm.services.kudago.KudaGoManager
-import ru.xmn.filmfilmfilm.services.omdb.OmdbManager
-import ru.xmn.filmfilmfilm.services.tmdb.TmdbManager
 import javax.inject.Inject
 
 @FragmentScope
 class FilmsProvider @Inject
-constructor(val kudaGo: KudaGoManager, val omdb: OmdbManager, val tmdb: TmdbManager) {
-    fun getMovies(addDays: Int = 0): Single<MutableList<FilmItemViewData>> =
+constructor(val kudaGo: KudaGoManager, val filmManager: FilmDataManager) {
+    fun getMovies(addDays: Int = 0): Single<MutableList<String?>>? =
             kudaGo.getMovies(addDays)
-                    .flatMap {
-                        Observable.fromIterable(it.results)
-                                .flatMap { omdb.getOmdbInfo(it) }
-                    }
-                    .map { createViewData(it.first, it.second) }
+                    .flatMap { Observable.fromIterable(it.results) }
+                    .doOnNext { filmManager.updateFilmData(it) }
+                    .map { it.imdbId }
                     .toList()
 }

@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_one_day_films.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.inflate
-import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmItemViewData
+import ru.xmn.filmfilmfilm.services.film.FilmData
 import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmsFragmentViewModel
 
 class FilmsFragment : LifecycleFragment() {
@@ -28,7 +28,7 @@ class FilmsFragment : LifecycleFragment() {
         }
     }
 
-    fun showMovies(films: List<FilmItemViewData>) {
+    fun showMovies(films: List<FilmData>) {
         (movieList.adapter as FilmsAdapter).items = films
     }
 
