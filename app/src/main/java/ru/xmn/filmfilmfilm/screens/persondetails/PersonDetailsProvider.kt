@@ -16,8 +16,6 @@ constructor(val filmDataManager: FilmDataManager, val tmdb: TmdbManager) {
 
     fun getMoviesForPerson(personType: PersonType, personId: String) =
             tmdb.getMoviesForPerson(personType, personId)
-                    .map { it.id.toString() }
-                    .flatMap { tmdb.getTmdbMovieInfo(it).doOnError { it.printStackTrace() } }
                     .doOnNext { filmDataManager.updateFilmData(it) }
                     .map { it.id.toString() }
                     .toList()

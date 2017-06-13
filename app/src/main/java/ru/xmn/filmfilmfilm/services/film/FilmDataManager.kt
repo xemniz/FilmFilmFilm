@@ -85,9 +85,13 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
                     timestamp = Dates.now.timeStamp()
                 })
             }.save()
+
+            updateRatings(filmData)
         }
 
-        if (movie.imdb_id != null) upd(movie)
+        if (movie.imdb_id == null)
+            tmdb.getTmdbMovieInfo(movie.id.toString()).subscribeOn(Schedulers.io()).subscribe({ upd(it) })
+        else upd(movie)
     }
 
     private fun retrieveOrCreateFilmData(id: String) = FilmData().queryFirst { query -> query.equalTo("imdbId", id) } ?: FilmData()
