@@ -1,6 +1,7 @@
 package ru.xmn.filmfilmfilm.screens.persondetails
 
 import android.app.Application
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
@@ -17,7 +18,17 @@ import ru.xmn.filmfilmfilm.services.tmdb.PersonType
 import javax.inject.Inject
 
 class PersonDetailsViewModel(val application: Application, val personId: String, val personType: PersonType) : ViewModel() {
-    val films = MutableLiveData<OrderedRealmCollection<FilmData>>().apply { value = Realm.getDefaultInstance().where(FilmData::class.java).equalTo("persons.id", personId).findAll() }
+
+    val filmIds = MutableLiveData<List<String?>>()
+    val films = MediatorLiveData<OrderedRealmCollection<FilmData>>()
+    init {
+        films.addSource(filmIds) {
+            Realm.getDefaultInstance().where(FilmData::class.java)
+                    .`in`("tmdbId", filmIds.value?.filter { it!=null }?.toTypedArray())
+                    .findAllAsync()
+                    .addChangeListener { list, _ -> films.value = list}
+        }
+    }
 
     @Inject
     lateinit var filmsProvider: PersonDetailsProvider
@@ -30,7 +41,8 @@ class PersonDetailsViewModel(val application: Application, val personId: String,
     fun loadMovies() {
         filmsProvider.getMoviesForPerson(personType, personId)
                 .subscribeOn(Schedulers.io())
-                .subscribe({ }, { it.printStackTrace() })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ filmIds.value = it }, { it.printStackTrace() })
     }
 
     class Factory(val application: Application, val personId: String, val personType: PersonType) : ViewModelProvider.Factory {

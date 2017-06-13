@@ -37,4 +37,3 @@ class PersonDetailsActivity : LifecycleActivity() {
         model.films.observe(this, Observer{person_films.adapter = it?.let { it1 -> FilmsAdapter(this, it1) } })
     }
 }
-

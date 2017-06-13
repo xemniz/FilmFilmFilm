@@ -68,9 +68,9 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
 
             filmData.apply {
                 imdbId = info.imdb_id
+                tmdbId = info.id.toString()
                 title = info.title
                 image = info.poster_path.pathToUrl()
-//                director = info.director
                 genres = info.genres.fold(RealmList<GenreData>(), {
                     list, genre ->
                     list.add(GenreData().apply {
@@ -87,9 +87,7 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
             }.save()
         }
 
-        if (movie.imdb_id == null)
-            tmdb.getTmdbMovieInfo(movie.id.toString()).subscribe({ upd(it) })
-        else upd(movie)
+        if (movie.imdb_id != null) upd(movie)
     }
 
     private fun retrieveOrCreateFilmData(id: String) = FilmData().queryFirst { query -> query.equalTo("imdbId", id) } ?: FilmData()
