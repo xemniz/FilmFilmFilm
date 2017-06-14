@@ -1,5 +1,8 @@
 package ru.xmn.filmfilmfilm.services.tmdb
 
+import io.realm.RealmList
+import ru.xmn.filmfilmfilm.services.film.PersonData
+
 class TmdbDiscoverResponse(
         var page: Int?,
         var results: List<TmdbMovieInfo>?,
@@ -82,3 +85,11 @@ class TmdbCredits(
         val cast: List<Cast>?,
         val crew: List<Crew>?
 )
+
+fun TmdbCredits.toRealm(): RealmList<PersonData> {
+    val cast = this.cast ?: emptyList()
+    val crew = this.crew ?: emptyList()
+    return (cast.map { PersonData().apply { tmdbId = it.id.toString(); name = it.name; descr = it.character; type = PersonType.CAST.name } } +
+            crew.map { PersonData().apply { tmdbId = it.id.toString(); name = it.name; descr = it.job; type = PersonType.CREW.name } })
+            .fold(RealmList(), { realmList, personData -> realmList.add(personData);realmList })
+}

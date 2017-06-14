@@ -33,6 +33,11 @@ class PersonDetailsActivity : LifecycleActivity() {
         subscribeToModel(model)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        person_films.setAdapter(null);
+    }
+
     private fun subscribeToModel(model: PersonDetailsViewModel) {
         model.films.observe(this, Observer{person_films.adapter = it?.let { it1 -> FilmsAdapter(this, it1) } })
     }

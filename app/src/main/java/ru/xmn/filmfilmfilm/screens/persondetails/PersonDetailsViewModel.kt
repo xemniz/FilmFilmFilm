@@ -23,10 +23,9 @@ class PersonDetailsViewModel(val application: Application, val personId: String,
     val films = MediatorLiveData<OrderedRealmCollection<FilmData>>()
     init {
         films.addSource(filmIds) {
-            Realm.getDefaultInstance().where(FilmData::class.java)
-                    .`in`("tmdbId", filmIds.value?.filter { it!=null }?.toTypedArray())
+            films.value = Realm.getDefaultInstance().where(FilmData::class.java)
+                    .`in`("tmdbId", filmIds.value?.filter { it!=null }?.toTypedArray()?: emptyArray())
                     .findAllAsync()
-                    .addChangeListener { list, _ -> films.value = list}
         }
     }
 

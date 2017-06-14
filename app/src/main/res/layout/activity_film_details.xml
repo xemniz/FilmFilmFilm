@@ -53,7 +53,8 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true">
 
             <android.support.v7.widget.CardView
                 android:id="@+id/posterCard"
@@ -181,16 +182,5 @@
 
 
     </android.support.v4.widget.NestedScrollView>
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:paddingTop="80dp"
-        app:layout_anchor="@id/main_appbar"
-        app:layout_anchorGravity="bottom|left|end">
-
-
-    </FrameLayout>
 
 </ru.xmn.filmfilmfilm.common.views.ElasticDragDismissCoordinatorLayout>

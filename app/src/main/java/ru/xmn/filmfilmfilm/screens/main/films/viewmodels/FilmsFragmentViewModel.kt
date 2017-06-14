@@ -18,10 +18,9 @@ class FilmsFragmentViewModel(application: Application?, val daysOffset: Int) : A
     val films = MediatorLiveData<OrderedRealmCollection<FilmData>>()
     init {
         films.addSource(filmIds) {
-            Realm.getDefaultInstance().where(FilmData::class.java)
+            films.value = Realm.getDefaultInstance().where(FilmData::class.java)
                     .`in`("imdbId", filmIds.value?.filter { it!=null }?.toTypedArray())
                     .findAllAsync()
-                    .addChangeListener { list, changeSet -> films.value = list}
         }
     }
 

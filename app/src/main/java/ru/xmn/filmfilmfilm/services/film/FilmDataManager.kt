@@ -11,9 +11,7 @@ import ru.xmn.filmfilmfilm.services.kudago.KudaGoManager
 import ru.xmn.filmfilmfilm.services.kudago.Movie
 import ru.xmn.filmfilmfilm.services.omdb.OmdbManager
 import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
-import ru.xmn.filmfilmfilm.services.tmdb.TmdbManager
-import ru.xmn.filmfilmfilm.services.tmdb.TmdbMovieInfo
-import ru.xmn.filmfilmfilm.services.tmdb.pathToUrl
+import ru.xmn.filmfilmfilm.services.tmdb.*
 
 class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: KudaGoManager) {
     fun updateFilmData(movie: Movie) {
@@ -39,7 +37,8 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
             })
         }.save()
 
-        movie.imdbId?.let { updateRatings(filmData) }
+        updateRatings(filmData)
+        updateCredits(filmData)
     }
 
     fun updateFilmData(movie: OmdbResponse?) {
@@ -54,14 +53,6 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
         }.save()
     }
 
-    private fun updateRatings(filmData: FilmData) {
-        if (filmData.imdbId == null) return
-
-        omdb.getOmdbInfo(filmData.imdbId!!)
-                .subscribeOn(Schedulers.io())
-                .subscribe({ updateFilmData(it) })
-    }
-
     fun updateFilmData(movie: TmdbMovieInfo) {
         fun upd(info: TmdbMovieInfo) {
             val filmData = movie.id.let { retrieveOrCreateFilmData(info.imdb_id!!) }
@@ -71,6 +62,8 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
                 tmdbId = info.id.toString()
                 title = info.title
                 image = info.poster_path.pathToUrl()
+                overview = info.overview
+                backdrop = info.backdrop_path.pathToUrl()
                 genres = info.genres.fold(RealmList<GenreData>(), {
                     list, genre ->
                     list.add(GenreData().apply {
@@ -87,11 +80,35 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
             }.save()
 
             updateRatings(filmData)
+            updateCredits(filmData)
         }
 
         if (movie.imdb_id == null)
             tmdb.getTmdbMovieInfo(movie.id.toString()).subscribeOn(Schedulers.io()).subscribe({ upd(it) })
         else upd(movie)
+    }
+
+    fun updateFilmData(it: TmdbCredits, imdbId: String) {
+        val filmData = retrieveOrCreateFilmData(imdbId)
+        filmData.apply { persons = it.toRealm() }.save()
+    }
+
+    private fun updateRatings(filmData: FilmData) {
+        if (filmData.imdbId == null) return
+
+        omdb.getOmdbInfo(filmData.imdbId!!)
+                .subscribeOn(Schedulers.io())
+                .subscribe({ updateFilmData(it) })
+    }
+
+    private fun updateCredits(filmData: FilmData) {
+        if (filmData.imdbId == null) return
+
+        val imdbId = filmData.imdbId!!
+        tmdb.getTmdbCredits(imdbId)
+                .subscribeOn(Schedulers.io())
+                .subscribe({ updateFilmData(it, imdbId) }, {})
+
     }
 
     private fun retrieveOrCreateFilmData(id: String) = FilmData().queryFirst { query -> query.equalTo("imdbId", id) } ?: FilmData()

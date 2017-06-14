@@ -24,6 +24,8 @@ import ru.xmn.filmfilmfilm.common.delay
 import ru.xmn.filmfilmfilm.common.dur
 import ru.xmn.filmfilmfilm.common.loadUrl
 import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissCoordinatorLayout
+import ru.xmn.filmfilmfilm.services.film.FilmData
+import ru.xmn.filmfilmfilm.services.film.PersonData
 import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
 import ru.xmn.filmfilmfilm.services.tmdb.PersonType
 import ru.xmn.filmfilmfilm.services.tmdb.TmdbCredits
@@ -70,6 +72,11 @@ class FilmDetailsActivity : LifecycleActivity() {
         val model = ViewModelProviders.of(this, factory).get(FilmDetailsViewModel::class.java)
 
         subscribeToModel(model)
+
+        cast.layoutManager = LinearLayoutManager(this)
+        crew.layoutManager = LinearLayoutManager(this)
+        cast.adapter = PersonsAdapter(this)
+        crew.adapter = PersonsAdapter(this)
         loadPosterThenStartTransition(posterUrl)
     }
 
@@ -100,22 +107,16 @@ class FilmDetailsActivity : LifecycleActivity() {
         model.filminfo.observe(this, Observer { it?.let { bindUi(it) } })
     }
 
-    private fun bindUi(it: Triple<TmdbMovieInfo, TmdbCredits, OmdbResponse>) {
-        val (info, credits, ratings) = it
-        filmName.text = info.title
-        genres.text = info.genres.map { it.name }.joinToString()
-        info_view.text = info.overview
-        ratings_info.text = ratings.Ratings.associateBy({ it.Source }, { it.Value })
-                .map { "${it.key}: ${it.value}" }.joinToString(separator = " | ")
-        expandedImage.loadUrl(info.backdrop_path.pathToUrl())
+    private fun bindUi(filmData: FilmData) {
+        filmName.text = filmData.title
+        genres.text = filmData.genres.map { it.name }.joinToString()
+        info_view.text = filmData.overview
+        ratings_info.text = filmData.ratings.associateBy({ it.source }, { it.value })
+                .map { "${it.key}: ${it.value}" }.joinToString(separator = ", ")
+        expandedImage.loadUrl(filmData.backdrop ?: "")
 
-        //todo kostyl (без дилея контент скроллится вниз)
-        Handler().postDelayed({
-            cast.layoutManager = LinearLayoutManager(this)
-            crew.layoutManager = LinearLayoutManager(this)
-            cast.adapter = PersonsAdapter(this).also { it.items = credits.cast?.filter { it.name != null }?.map { PersonsAdapter.PersonItem(it.id.toString(), it.name!!, it.character ?: "", PersonType.CAST) }?.take(7) ?: emptyList() }
-            crew.adapter = PersonsAdapter(this).also { it.items = credits.crew?.filter { it.name != null }?.map { PersonsAdapter.PersonItem(it.id.toString(), it.name!!, it.job ?: "", PersonType.CREW) }?.take(7) ?: emptyList() }
-        }, 300)
+        (cast.adapter as PersonsAdapter).apply { items = filmData.persons.filter { it.type == PersonType.CAST.name }.map { PersonsAdapter.PersonItem(it.tmdbId, it.name ?: "", it.descr ?: "", PersonType.CAST) }.take(7) }
+        (crew.adapter as PersonsAdapter).apply { items = filmData.persons.filter { it.type == PersonType.CREW.name }.map { PersonsAdapter.PersonItem(it.tmdbId, it.name ?: "", it.descr ?: "", PersonType.CREW) }.take(7) }
     }
 
     private fun loadPosterThenStartTransition(posterUrl: String?) {

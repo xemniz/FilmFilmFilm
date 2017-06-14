@@ -54,6 +54,11 @@ class FilmsFragment : LifecycleFragment() {
         subscribeToModel(model)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        movieList.setAdapter(null)
+    }
+
     fun subscribeToModel(model: FilmsFragmentViewModel) {
         model.films.observe(this, Observer({ it?.let { it1 -> showMovies(it1) } }))
     }
