@@ -5,7 +5,6 @@ import android.arch.lifecycle.LifecycleActivity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.transition.Fade
 import android.transition.Slide
@@ -25,12 +24,7 @@ import ru.xmn.filmfilmfilm.common.dur
 import ru.xmn.filmfilmfilm.common.loadUrl
 import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissCoordinatorLayout
 import ru.xmn.filmfilmfilm.services.film.FilmData
-import ru.xmn.filmfilmfilm.services.film.PersonData
-import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
 import ru.xmn.filmfilmfilm.services.tmdb.PersonType
-import ru.xmn.filmfilmfilm.services.tmdb.TmdbCredits
-import ru.xmn.filmfilmfilm.services.tmdb.TmdbMovieInfo
-import ru.xmn.filmfilmfilm.services.tmdb.pathToUrl
 import java.lang.Exception
 
 
@@ -138,4 +132,3 @@ class FilmDetailsActivity : LifecycleActivity() {
                 .into(poster)
     }
 }
-

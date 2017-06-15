@@ -50,6 +50,9 @@ open class SourceData : RealmObject() {
         val kudago = "kudago"
         val omdb = "omdb"
         val tmdb = "tmdb"
+        val kudagoPeriod:Long = 3600*24
+        val omdbPeriod:Long = 3600*24
+        val tmdbPeriod:Long = 3600*24
     }
 
     override fun equals(other: Any?): Boolean {

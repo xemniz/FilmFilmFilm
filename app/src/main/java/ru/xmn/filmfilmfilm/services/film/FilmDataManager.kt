@@ -14,8 +14,10 @@ import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
 import ru.xmn.filmfilmfilm.services.tmdb.*
 
 class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: KudaGoManager) {
+
     fun updateFilmData(movie: Movie) {
         val filmData = movie.imdbId?.let { retrieveOrCreateFilmData(it) } ?: return
+        if (!isSourceOutdated(filmData.sources, SourceData.kudago, SourceData.kudagoPeriod)) return
 
         filmData.apply {
             imdbId = movie.imdbId
@@ -29,12 +31,7 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
                 })
                 list
             })
-            val sourceData = sources.find { it.name == SourceData.kudago }
-            if (sourceData != null) sourceData.timestamp = Dates.now.timeStamp()
-            else sources.add(SourceData().apply {
-                name = SourceData.kudago
-                timestamp = Dates.now.timeStamp()
-            })
+            addSource(sources, SourceData.kudago)
         }.save()
 
         updateRatings(filmData)
@@ -43,6 +40,7 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
 
     fun updateFilmData(movie: OmdbResponse?) {
         val filmData = movie?.imdbID?.let { retrieveOrCreateFilmData(it) } ?: return
+        if (!isSourceOutdated(filmData.sources, SourceData.omdb, SourceData.omdbPeriod)) return
 
         filmData.apply {
             imdbId = movie.imdbID
@@ -50,12 +48,14 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
                 list, rating ->
                 list.add(RatingData().apply { source = rating.Source; value = rating.Value }); list
             })
+            addSource(sources, SourceData.omdb)
         }.save()
     }
 
     fun updateFilmData(movie: TmdbMovieInfo) {
         fun upd(info: TmdbMovieInfo) {
             val filmData = movie.id.let { retrieveOrCreateFilmData(info.imdb_id!!) }
+            if (!isSourceOutdated(filmData.sources, SourceData.tmdb, SourceData.tmdbPeriod)) return
 
             filmData.apply {
                 imdbId = info.imdb_id
@@ -77,6 +77,7 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
                     name = SourceData.tmdb
                     timestamp = Dates.now.timeStamp()
                 })
+                addSource(sources, SourceData.tmdb)
             }.save()
 
             updateRatings(filmData)
@@ -112,4 +113,21 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
     }
 
     private fun retrieveOrCreateFilmData(id: String) = FilmData().queryFirst { query -> query.equalTo("imdbId", id) } ?: FilmData()
+
+    private fun addSource(sources: RealmList<SourceData>, source: String) {
+        val sourceData = sources.find { it.name == source }
+        if (sourceData != null) sourceData.timestamp = Dates.now.timeStamp()
+        else sources.add(SourceData().apply {
+            name = SourceData.kudago
+            timestamp = Dates.now.timeStamp()
+        })
+    }
+
+    private fun isSourceOutdated(sources: RealmList<SourceData>, source: String, outdatePeriod: Long): Boolean {
+        val sourceData = sources.find { it.name == source }
+        return when {
+            sourceData == null -> true
+            else -> (Dates.now.timeStamp() - (sourceData.timestamp ?: 0)) > outdatePeriod
+        }
+    }
 }
