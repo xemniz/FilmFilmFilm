@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import ru.xmn.filmfilmfilm.R
@@ -86,6 +87,8 @@ class ElasticDragDismissFrameLayout @JvmOverloads constructor(context: Context, 
 
     override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray) {
         // if we're in a drag gesture and the user reverses up the we should take those events
+        Log.d("onNestedScroll", "dxConsumed = $dx, dyConsumed = $dy, dxUnconsumed = ${consumed[0]}, dyUnconsumed = ${consumed[1]}")
+
         if (draggingDown && dy > 0 || draggingUp && dy < 0) {
             dragScale(dy)
             consumed[1] = dy

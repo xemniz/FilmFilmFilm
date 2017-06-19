@@ -23,6 +23,7 @@ import ru.xmn.filmfilmfilm.common.delay
 import ru.xmn.filmfilmfilm.common.dur
 import ru.xmn.filmfilmfilm.common.loadUrl
 import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissCoordinatorLayout
+import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissFrameLayout
 import ru.xmn.filmfilmfilm.services.film.FilmData
 import ru.xmn.filmfilmfilm.services.tmdb.PersonType
 import java.lang.Exception
@@ -35,7 +36,7 @@ class FilmDetailsActivity : LifecycleActivity() {
         val FILM_ID_FOR_TMDB_KEY = "FilmDetailsActivity.Film"
     }
 
-    lateinit private var chromeFader: ElasticDragDismissCoordinatorLayout.ElasticDragDismissCallback
+    lateinit private var chromeFader: ElasticDragDismissFrameLayout.ElasticDragDismissCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +56,7 @@ class FilmDetailsActivity : LifecycleActivity() {
             }
         })
 
-        chromeFader = ElasticDragDismissCoordinatorLayout.SystemChromeFader(this)
+        chromeFader = ElasticDragDismissFrameLayout.SystemChromeFader(this)
 
         val posterUrl = intent.getStringExtra(POSTER_KEY)
         val filmImdbId = intent.getStringExtra(FILM_ID_FOR_TMDB_KEY)

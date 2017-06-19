@@ -23,7 +23,8 @@
             android:name=".screens.filmdetails.FilmDetailsActivity"
             android:theme="@style/FilmFilmFilm.Translucent">
         </activity>
-        <activity android:name=".screens.persondetails.PersonDetailsActivity">
+        <activity android:name=".screens.persondetails.PersonDetailsActivity"
+                  android:theme="@style/FilmFilmFilm.Translucent">
         </activity>
     </application>
 

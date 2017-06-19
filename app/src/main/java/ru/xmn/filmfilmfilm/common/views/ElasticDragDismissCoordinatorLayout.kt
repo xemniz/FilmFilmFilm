@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.support.design.widget.CoordinatorLayout
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import ru.xmn.filmfilmfilm.R
@@ -97,6 +98,7 @@ class ElasticDragDismissCoordinatorLayout @JvmOverloads constructor(context: Con
 
     override fun onNestedScroll(target: View, dxConsumed: Int, dyConsumed: Int,
                                 dxUnconsumed: Int, dyUnconsumed: Int) {
+        Log.d("onNestedScroll", "dxConsumed = $dxConsumed, dyConsumed = $dyConsumed, dxUnconsumed = $dxUnconsumed, dyUnconsumed = $dyUnconsumed")
         super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed)
         dragScale(dyUnconsumed)
     }
