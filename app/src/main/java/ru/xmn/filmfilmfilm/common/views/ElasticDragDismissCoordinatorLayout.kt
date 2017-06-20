@@ -1,8 +1,11 @@
 package ru.xmn.filmfilmfilm.common.views
 
 import android.app.Activity
+
+
 import android.content.Context
 import android.graphics.Color
+import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.util.AttributeSet
 import android.util.Log
@@ -12,10 +15,12 @@ import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.utils.AnimUtils
 import ru.xmn.filmfilmfilm.common.utils.ColorUtils
 import ru.xmn.filmfilmfilm.common.utils.ViewUtils
+import ru.xmn.filmfilmfilm.common.views
+import kotlin.properties.Delegates
 
-
-class ElasticDragDismissCoordinatorLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null,
-                                                              defStyleAttr: Int = 0, defStyleRes: Int = 0) : CoordinatorLayout(context, attrs, defStyleAttr) {
+class ElasticDragDismissCoordinatorLayout
+@JvmOverloads constructor(context: Context, attrs: AttributeSet? = null,
+                          defStyleAttr: Int = 0, defStyleRes: Int = 0) : CoordinatorLayout(context, attrs, defStyleAttr) {
 
     // configurable attribs
     private var dragDismissDistance = java.lang.Float.MAX_VALUE
@@ -30,6 +35,8 @@ class ElasticDragDismissCoordinatorLayout @JvmOverloads constructor(context: Con
     private var draggingUp = false
 
     private var callbacks: MutableList<ElasticDragDismissCallback>? = null
+
+    private var enableElastic: Boolean = false
 
     init {
 
@@ -78,29 +85,42 @@ class ElasticDragDismissCoordinatorLayout @JvmOverloads constructor(context: Con
         /**
          * Called when dragging is released and has exceeded the threshold dismiss distance.
          */
-        internal open fun onDragDismissed() {}
+        internal open fun onDragDismissed() {
+        }
 
     }
 
     override fun onStartNestedScroll(child: View, target: View, nestedScrollAxes: Int): Boolean {
-        super.onStartNestedScroll(child, target, nestedScrollAxes)
-        return nestedScrollAxes and View.SCROLL_AXIS_VERTICAL !== 0
+        if (enableElastic)
+            nestedScrollAxes and View.SCROLL_AXIS_VERTICAL !== 0
+
+        return super.onStartNestedScroll(child, target, nestedScrollAxes)
     }
 
     override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray) {
         // if we're in a drag gesture and the user reverses up the we should take those events
         super.onNestedPreScroll(target, dx, dy, consumed)
-        if (draggingDown && dy > 0 || draggingUp && dy < 0) {
-            dragScale(dy)
-            consumed[1] = dy
-        }
+
+        if (enableElastic)
+            if (draggingDown && dy > 0 || draggingUp && dy < 0) {
+                dragScale(dy)
+                consumed[1] = dy
+            }
+    }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        val appBar = views.filter { it is AppBarLayout }.map { it as AppBarLayout }.firstOrNull()
+        appBar?.addOnOffsetChangedListener { _, offset -> enableElastic = offset >= 0 || appBar.totalScrollRange + offset == 0}
     }
 
     override fun onNestedScroll(target: View, dxConsumed: Int, dyConsumed: Int,
                                 dxUnconsumed: Int, dyUnconsumed: Int) {
         Log.d("onNestedScroll", "dxConsumed = $dxConsumed, dyConsumed = $dyConsumed, dxUnconsumed = $dxUnconsumed, dyUnconsumed = $dyUnconsumed")
         super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed)
-        dragScale(dyUnconsumed)
+
+        if (enableElastic)
+            dragScale(dyUnconsumed)
     }
 
     override fun onStopNestedScroll(child: View) {

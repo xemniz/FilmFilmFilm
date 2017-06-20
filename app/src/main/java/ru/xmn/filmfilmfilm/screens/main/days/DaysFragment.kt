@@ -27,7 +27,7 @@ class DaysFragment : LifecycleFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         daysPager?.apply {
-            adapter = DaysAdapter(activity.supportFragmentManager)
+            adapter = DaysAdapter(activity.supportFragmentManager, tabLayout)
         }
         tabLayout.setupWithViewPager(daysPager)
     }
@@ -37,8 +37,8 @@ class DaysFragment : LifecycleFragment() {
     }
 }
 
-class DaysAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-    override fun getItem(position: Int): Fragment = FilmsFragment.withDaysOffset(position)
+class DaysAdapter(fm: FragmentManager, val toolbar: View) : FragmentPagerAdapter(fm) {
+    override fun getItem(position: Int): Fragment = FilmsFragment.withDaysOffset(position, toolbar)
 
     override fun getCount() = 10
 

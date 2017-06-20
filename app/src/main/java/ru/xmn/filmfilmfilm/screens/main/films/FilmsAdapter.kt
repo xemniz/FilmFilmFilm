@@ -15,19 +15,18 @@ import kotlinx.android.synthetic.main.film_item.view.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.inflate
 import ru.xmn.filmfilmfilm.common.loadUrl
-import ru.xmn.filmfilmfilm.common.ui.adapter.AutoUpdatableAdapter
+import ru.xmn.filmfilmfilm.common.pairSharedTransition
 import ru.xmn.filmfilmfilm.screens.filmdetails.FilmDetailsActivity
 import ru.xmn.filmfilmfilm.services.film.FilmData
-import kotlin.properties.Delegates
 
 
-class FilmsAdapter(val activity: FragmentActivity, data: OrderedRealmCollection<FilmData>) : RealmRecyclerViewAdapter<FilmData, FilmsAdapter.ViewHolder>(data, true) {
+class FilmsAdapter(val activity: FragmentActivity, data: OrderedRealmCollection<FilmData>, val toolbar: View) : RealmRecyclerViewAdapter<FilmData, FilmsAdapter.ViewHolder>(data, true) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position))
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.film_item), activity)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.film_item), activity, toolbar)
 
-    class ViewHolder(view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, val activity: FragmentActivity, val toolbar: View) : RecyclerView.ViewHolder(view) {
         fun bind(film: FilmData?) {
             if (film == null) return
             itemView.apply {
@@ -39,8 +38,9 @@ class FilmsAdapter(val activity: FragmentActivity, data: OrderedRealmCollection<
                 setOnClickListener {
                     val intent = Intent(this@ViewHolder.itemView.context, FilmDetailsActivity::class.java)
                     val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
-                            Pair<View, String>(infoCard, ViewCompat.getTransitionName(infoCard)),
-                            Pair<View, String>(posterCard, ViewCompat.getTransitionName(posterCard)))
+                            infoCard.pairSharedTransition(),
+                            posterCard.pairSharedTransition(),
+                            toolbar.pairSharedTransition())
                     intent.putExtra(FilmDetailsActivity.POSTER_KEY, film.image)
                     intent.putExtra(FilmDetailsActivity.FILM_ID_FOR_TMDB_KEY, film.imdbId ?: film.tmdbId)
                     startActivity(this@ViewHolder.itemView.context, intent, options.toBundle())

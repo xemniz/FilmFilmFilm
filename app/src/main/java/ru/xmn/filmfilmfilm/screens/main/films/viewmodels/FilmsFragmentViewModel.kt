@@ -33,7 +33,8 @@ class FilmsFragmentViewModel(application: Application?, val daysOffset: Int) : A
     }
 
     fun loadMovies() {
-        filmsProvider.getMovies(daysOffset)?.subscribeOn(Schedulers.io())
+        filmsProvider.getMovies(daysOffset)
+                ?.subscribeOn(Schedulers.io())
                 ?.observeOn(AndroidSchedulers.mainThread())
                 ?.subscribe({ filmIds.value = it }, { it.printStackTrace() })
     }

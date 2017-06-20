@@ -13,7 +13,7 @@ import ru.xmn.filmfilmfilm.services.omdb.OmdbManager
 import ru.xmn.filmfilmfilm.services.omdb.OmdbResponse
 import ru.xmn.filmfilmfilm.services.tmdb.*
 
-class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: KudaGoManager) {
+class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager) {
 
     fun updateFilmData(movie: Movie) {
         val filmData = movie.imdbId?.let { retrieveOrCreateFilmData(it) } ?: return
@@ -85,7 +85,7 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
         }
 
         if (movie.imdb_id == null)
-            tmdb.getTmdbMovieInfo(movie.id.toString()).subscribeOn(Schedulers.io()).subscribe({ upd(it) })
+            tmdb.getTmdbMovieInfo(movie.id.toString()).subscribeOn(Schedulers.io()).subscribe({ upd(it) }, {it.printStackTrace()})
         else upd(movie)
     }
 
@@ -99,7 +99,7 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
 
         omdb.getOmdbInfo(filmData.imdbId!!)
                 .subscribeOn(Schedulers.io())
-                .subscribe({ updateFilmData(it) })
+                .subscribe({ updateFilmData(it) }, {it.printStackTrace()})
     }
 
     private fun updateCredits(filmData: FilmData) {
@@ -108,7 +108,7 @@ class FilmDataManager(val tmdb: TmdbManager, val omdb: OmdbManager, val kudaGo: 
         val imdbId = filmData.imdbId!!
         tmdb.getTmdbCredits(imdbId)
                 .subscribeOn(Schedulers.io())
-                .subscribe({ updateFilmData(it, imdbId) }, {})
+                .subscribe({ updateFilmData(it, imdbId) }, {it.printStackTrace()})
 
     }
 

@@ -3,6 +3,6 @@
     <string name="transition_poster">transition_poster</string>
     <string name="transition_posterCard">transition_posterCard</string>
     <string name="transition_film_description">transition_film_description</string>
-    <string name="transition_tabs">transition_tabs</string>
     <string name="transition_personName">transition_personName</string>
+    <string name="transition_toolbar">transition_toolbar</string>
 </resources>

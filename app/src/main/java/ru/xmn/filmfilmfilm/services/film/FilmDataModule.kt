@@ -12,5 +12,5 @@ import javax.inject.Singleton
 class FilmDataModule {
     @Provides @Singleton
     fun providesFilmDataManager(tmdb: TmdbManager, omdb: OmdbManager, kudaGo: KudaGoManager): FilmDataManager
-            = FilmDataManager(tmdb, omdb, kudaGo)
+            = FilmDataManager(tmdb, omdb)
 }

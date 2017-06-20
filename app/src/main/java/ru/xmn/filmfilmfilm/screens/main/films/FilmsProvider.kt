@@ -15,6 +15,7 @@ constructor(val kudaGo: KudaGoManager, val filmManager: FilmDataManager) {
             kudaGo.getMovies(addDays)
                     .flatMap { Observable.fromIterable(it.results) }
                     .doOnNext { filmManager.updateFilmData(it) }
+                    .filter { it.imdbId!=null }
                     .map { it.imdbId }
                     .toList()
 }

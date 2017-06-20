@@ -20,14 +20,18 @@ class FilmsFragment : LifecycleFragment() {
     companion object {
         val DAYS_OFFSET = "days_offset"
 
-        fun withDaysOffset(offset: Int): FilmsFragment {
+        fun withDaysOffset(offset: Int, toolbar: View): FilmsFragment {
             val fragment = FilmsFragment()
             val args = Bundle()
             args.putInt(DAYS_OFFSET, offset)
             fragment.setArguments(args)
+            fragment.toolbar = toolbar
             return fragment
         }
     }
+
+    //todo need to survive configuration change
+    lateinit var toolbar: View;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(R.layout.fragment_one_day_films)
@@ -64,7 +68,7 @@ class FilmsFragment : LifecycleFragment() {
     }
 
     fun showMovies(films: OrderedRealmCollection<FilmData>) {
-        movieList.adapter = FilmsAdapter(activity, films)
+        movieList.adapter = FilmsAdapter(activity, films, toolbar)
     }
 
 }

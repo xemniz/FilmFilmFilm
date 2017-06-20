@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.screens.main.days.DaysFragment
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        changeFragment(DaysFragment())
+
+        if (savedInstanceState == null)
+            changeFragment(DaysFragment())
     }
 
     fun changeFragment(f: Fragment, cleanStack: Boolean = false) {

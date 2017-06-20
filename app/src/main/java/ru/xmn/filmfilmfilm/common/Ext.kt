@@ -1,6 +1,7 @@
 package ru.xmn.filmfilmfilm.common
 
 import android.support.annotation.LayoutRes
+import android.support.v4.view.ViewCompat
 import android.transition.Transition
 import android.view.LayoutInflater
 import android.view.View
@@ -14,16 +15,26 @@ import ru.xmn.filmfilmfilm.BuildConfig
 import java.util.*
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
-import com.squareup.moshi.Types.newParameterizedType
 import java.lang.reflect.Type
 
+fun View.pairSharedTransition(): android.support.v4.util.Pair<View, String> {
+    return android.support.v4.util.Pair<View, String>(this, ViewCompat.getTransitionName(this))
+}
+
+val ViewGroup.views: List<View>
+    get() = (0..getChildCount() - 1).map { getChildAt(it) }
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }
 
-fun Transition.delay(i: Long): Transition {this.startDelay = i; return this}
-fun Transition.dur(i: Long): Transition {this.duration = i; return this}
+fun Transition.delay(i: Long): Transition {
+    this.startDelay = i; return this
+}
+
+fun Transition.dur(i: Long): Transition {
+    this.duration = i; return this
+}
 
 fun ImageView.loadUrl(url: String) {
     Glide.with(context)

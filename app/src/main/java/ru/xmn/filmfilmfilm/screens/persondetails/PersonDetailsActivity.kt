@@ -5,10 +5,8 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_film_details.*
 import kotlinx.android.synthetic.main.activity_person_detail.*
 import ru.xmn.filmfilmfilm.R
-import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissCoordinatorLayout
 import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissFrameLayout
 import ru.xmn.filmfilmfilm.screens.main.films.FilmsAdapter
 import ru.xmn.filmfilmfilm.services.tmdb.PersonType
@@ -56,6 +54,6 @@ class PersonDetailsActivity : LifecycleActivity() {
     }
 
     private fun subscribeToModel(model: PersonDetailsViewModel) {
-        model.films.observe(this, Observer { person_films.adapter = it?.let { it1 -> FilmsAdapter(this, it1) } })
+        model.films.observe(this, Observer { person_films.adapter = it?.let { it1 -> FilmsAdapter(this, it1, toolbar) } })
     }
 }

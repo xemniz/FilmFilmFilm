@@ -22,8 +22,8 @@ import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.delay
 import ru.xmn.filmfilmfilm.common.dur
 import ru.xmn.filmfilmfilm.common.loadUrl
+import ru.xmn.filmfilmfilm.common.pairSharedTransition
 import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissCoordinatorLayout
-import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissFrameLayout
 import ru.xmn.filmfilmfilm.services.film.FilmData
 import ru.xmn.filmfilmfilm.services.tmdb.PersonType
 import java.lang.Exception
@@ -36,27 +36,31 @@ class FilmDetailsActivity : LifecycleActivity() {
         val FILM_ID_FOR_TMDB_KEY = "FilmDetailsActivity.Film"
     }
 
-    lateinit private var chromeFader: ElasticDragDismissFrameLayout.ElasticDragDismissCallback
+    lateinit private var chromeFader: ElasticDragDismissCoordinatorLayout.ElasticDragDismissCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_film_details)
-        postponeEnterTransition()
 
-        setEnterSharedElementCallback(object : SharedElementCallback() {
-            override fun onSharedElementEnd(sharedElementNames: MutableList<String>?, sharedElements: MutableList<View>?, sharedElementSnapshots: MutableList<View>?) {
-                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
-                val visible = description_container.visibility == View.VISIBLE
+        if (savedInstanceState == null) {
+            postponeEnterTransition()
+            setEnterSharedElementCallback(object : SharedElementCallback() {
+                override fun onSharedElementEnd(sharedElementNames: MutableList<String>?, sharedElements: MutableList<View>?, sharedElementSnapshots: MutableList<View>?) {
+                    super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
+                    val visible = description_container.visibility == View.VISIBLE
 
-                if (visible) {
-                    runExitAnimation()
-                } else {
-                    runEnterAnimation()
+                    if (visible) {
+                        runExitAnimation()
+                    } else {
+                        runEnterAnimation()
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            description_container.visibility = View.VISIBLE
+        }
 
-        chromeFader = ElasticDragDismissFrameLayout.SystemChromeFader(this)
+        chromeFader = ElasticDragDismissCoordinatorLayout.SystemChromeFader(this)
 
         val posterUrl = intent.getStringExtra(POSTER_KEY)
         val filmImdbId = intent.getStringExtra(FILM_ID_FOR_TMDB_KEY)
@@ -70,9 +74,12 @@ class FilmDetailsActivity : LifecycleActivity() {
 
         cast.layoutManager = LinearLayoutManager(this)
         crew.layoutManager = LinearLayoutManager(this)
-        cast.adapter = PersonsAdapter(this)
-        crew.adapter = PersonsAdapter(this)
-        loadPosterThenStartTransition(posterUrl)
+        cast.adapter = PersonsAdapter(this, main_appbar.pairSharedTransition())
+        crew.adapter = PersonsAdapter(this, main_appbar.pairSharedTransition())
+
+        if (savedInstanceState == null)
+            loadPosterThenStartTransition(posterUrl)
+        else {poster.loadUrl(posterUrl)}
     }
 
     private fun runEnterAnimation() {

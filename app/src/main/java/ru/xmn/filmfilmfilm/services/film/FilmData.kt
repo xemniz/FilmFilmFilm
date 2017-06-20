@@ -19,6 +19,11 @@ open class FilmData : RealmObject() {
     var ratings: RealmList<RatingData> = RealmList()
     var persons: RealmList<PersonData> = RealmList()
     var sources: RealmList<SourceData> = RealmList()
+    override fun toString(): String {
+        return "FilmData(title=$title, backdrop=$backdrop, genres=$genres, ratings=$ratings)"
+    }
+
+
 }
 
 open class PersonData : RealmObject() {

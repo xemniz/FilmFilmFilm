@@ -16,7 +16,6 @@ class OneDayFilmProviderTest {
     fun getOmdb() {
         val dataModule = NetworkModule()
         dataModule.providesOmdbService(dataModule.provideRestAdapterOmdb(dataModule.provideOkHttpClient())).getMovieInfo("tt4287320").subscribe(Consumer {
-            println(it)
             Assert.assertEquals("tt4287320", it.imdbID)
         })
     }
