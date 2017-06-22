@@ -5,10 +5,14 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.view.MenuItem
+import io.realm.OrderedRealmCollection
 import kotlinx.android.synthetic.main.activity_person_detail.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissFrameLayout
 import ru.xmn.filmfilmfilm.screens.main.films.FilmsAdapter
+import ru.xmn.filmfilmfilm.services.film.FilmData
 import ru.xmn.filmfilmfilm.services.tmdb.PersonType
 
 class PersonDetailsActivity : LifecycleActivity() {
@@ -24,6 +28,9 @@ class PersonDetailsActivity : LifecycleActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_person_detail)
         person_films.layoutManager = LinearLayoutManager(this)
+        setActionBar(toolbar)
+        actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar.setDisplayShowHomeEnabled(true)
 
         chromeFader = ElasticDragDismissFrameLayout.SystemChromeFader(this)
 
@@ -36,6 +43,17 @@ class PersonDetailsActivity : LifecycleActivity() {
         val model = ViewModelProviders.of(this, factory).get(PersonDetailsViewModel::class.java)
 
         subscribeToModel(model)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onResume() {
@@ -54,6 +72,10 @@ class PersonDetailsActivity : LifecycleActivity() {
     }
 
     private fun subscribeToModel(model: PersonDetailsViewModel) {
-        model.films.observe(this, Observer { person_films.adapter = it?.let { it1 -> FilmsAdapter(this, it1, toolbar) } })
+        model.films.observe(this, Observer {  it?.let { bindUi(it)  } })
+    }
+
+    private fun bindUi(it: OrderedRealmCollection<FilmData>){
+        person_films.adapter = FilmsAdapter(this, it)
     }
 }

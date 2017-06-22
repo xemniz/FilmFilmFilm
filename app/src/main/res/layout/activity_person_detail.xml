@@ -15,17 +15,7 @@
         android:layout_height="match_parent"
         tools:context="ru.xmn.filmfilmfilm.screens.persondetails.PersonDetailsActivity">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:transitionName="@string/transition_personName"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:background="@android:color/white"/>
-
-        <android.support.v7.widget.Toolbar
+        <Toolbar
             android:id="@+id/toolbar"
             android:layout_width="0dp"
             android:layout_height="56dp"
@@ -36,6 +26,16 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:transitionName="@string/transition_personName"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@android:color/white"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/person_films"

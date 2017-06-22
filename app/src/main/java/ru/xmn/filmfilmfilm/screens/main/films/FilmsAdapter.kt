@@ -20,13 +20,13 @@ import ru.xmn.filmfilmfilm.screens.filmdetails.FilmDetailsActivity
 import ru.xmn.filmfilmfilm.services.film.FilmData
 
 
-class FilmsAdapter(val activity: FragmentActivity, data: OrderedRealmCollection<FilmData>, val toolbar: View) : RealmRecyclerViewAdapter<FilmData, FilmsAdapter.ViewHolder>(data, true) {
+class FilmsAdapter(val activity: FragmentActivity, data: OrderedRealmCollection<FilmData>) : RealmRecyclerViewAdapter<FilmData, FilmsAdapter.ViewHolder>(data, true) {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(getItem(position))
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.film_item), activity, toolbar)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(parent.inflate(R.layout.film_item), activity)
 
-    class ViewHolder(view: View, val activity: FragmentActivity, val toolbar: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
         fun bind(film: FilmData?) {
             if (film == null) return
             itemView.apply {
@@ -37,10 +37,8 @@ class FilmsAdapter(val activity: FragmentActivity, data: OrderedRealmCollection<
                 genres.text = film.genres.map { it.name }.joinToString(separator = " | ")
                 setOnClickListener {
                     val intent = Intent(this@ViewHolder.itemView.context, FilmDetailsActivity::class.java)
-                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
-                            infoCard.pairSharedTransition(),
-                            posterCard.pairSharedTransition(),
-                            toolbar.pairSharedTransition())
+                    val args = arrayOf(infoCard.pairSharedTransition(), posterCard.pairSharedTransition())
+                    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, *args)
                     intent.putExtra(FilmDetailsActivity.POSTER_KEY, film.image)
                     intent.putExtra(FilmDetailsActivity.FILM_ID_FOR_TMDB_KEY, film.imdbId ?: film.tmdbId)
                     startActivity(this@ViewHolder.itemView.context, intent, options.toBundle())

@@ -12,6 +12,7 @@ import io.realm.OrderedRealmCollection
 import kotlinx.android.synthetic.main.fragment_one_day_films.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.inflate
+import ru.xmn.filmfilmfilm.common.ui.ToolbarOwner
 import ru.xmn.filmfilmfilm.services.film.FilmData
 import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmsFragmentViewModel
 
@@ -20,18 +21,17 @@ class FilmsFragment : LifecycleFragment() {
     companion object {
         val DAYS_OFFSET = "days_offset"
 
-        fun withDaysOffset(offset: Int, toolbar: View): FilmsFragment {
+        fun withDaysOffset(offset: Int, toolbarOwner: ToolbarOwner): FilmsFragment {
             val fragment = FilmsFragment()
             val args = Bundle()
             args.putInt(DAYS_OFFSET, offset)
             fragment.setArguments(args)
-            fragment.toolbar = toolbar
+            fragment.toolbarOwner = toolbarOwner
             return fragment
         }
     }
 
-    //todo need to survive configuration change
-    lateinit var toolbar: View;
+    lateinit var toolbarOwner: ToolbarOwner;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(R.layout.fragment_one_day_films)
@@ -68,7 +68,7 @@ class FilmsFragment : LifecycleFragment() {
     }
 
     fun showMovies(films: OrderedRealmCollection<FilmData>) {
-        movieList.adapter = FilmsAdapter(activity, films, toolbar)
+        movieList.adapter = FilmsAdapter(activity, films)
     }
 
 }

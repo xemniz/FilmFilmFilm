@@ -15,9 +15,12 @@ import khronos.toString
 import kotlinx.android.synthetic.main.fragment_days.*
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.inflate
+import ru.xmn.filmfilmfilm.common.ui.ToolbarOwner
 import ru.xmn.filmfilmfilm.screens.main.films.FilmsFragment
 
-class DaysFragment : LifecycleFragment() {
+class DaysFragment : LifecycleFragment(), ToolbarOwner {
+    override val toolbar: View?
+        get() = daysPager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(R.layout.fragment_days)
@@ -27,7 +30,7 @@ class DaysFragment : LifecycleFragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         daysPager?.apply {
-            adapter = DaysAdapter(activity.supportFragmentManager, tabLayout)
+            adapter = DaysAdapter(activity.supportFragmentManager, this@DaysFragment)
         }
         tabLayout.setupWithViewPager(daysPager)
     }
@@ -37,8 +40,8 @@ class DaysFragment : LifecycleFragment() {
     }
 }
 
-class DaysAdapter(fm: FragmentManager, val toolbar: View) : FragmentPagerAdapter(fm) {
-    override fun getItem(position: Int): Fragment = FilmsFragment.withDaysOffset(position, toolbar)
+class DaysAdapter(fm: FragmentManager, val toolbarOwner: ToolbarOwner) : FragmentPagerAdapter(fm) {
+    override fun getItem(position: Int): Fragment = FilmsFragment.withDaysOffset(position, toolbarOwner)
 
     override fun getCount() = 10
 

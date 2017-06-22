@@ -23,6 +23,7 @@ class FilmTabLayout(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         for (i in 0..tabCount - 1) {
             val tab = getTabAt(i)
             val view = FilmTabTextView(this.context)
+            //todo не лучший способ, нужно избавиться от проперти
             textViews += view
             view.id = android.R.id.text1
             tab?.customView = view

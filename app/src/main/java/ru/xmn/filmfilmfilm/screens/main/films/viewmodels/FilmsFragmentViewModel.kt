@@ -40,6 +40,7 @@ class FilmsFragmentViewModel(application: Application?, val daysOffset: Int) : A
     }
 
     class Factory(val application: Application?, val daysOffset: Int) : ViewModelProvider.NewInstanceFactory() {
+        @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T = FilmsFragmentViewModel(application, daysOffset) as T
     }
 }

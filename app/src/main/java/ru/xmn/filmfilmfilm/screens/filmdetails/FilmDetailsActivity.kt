@@ -12,6 +12,7 @@ import android.transition.TransitionManager
 import android.transition.TransitionSet
 import android.transition.TransitionSet.ORDERING_TOGETHER
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.GlideDrawable
@@ -22,13 +23,12 @@ import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.delay
 import ru.xmn.filmfilmfilm.common.dur
 import ru.xmn.filmfilmfilm.common.loadUrl
-import ru.xmn.filmfilmfilm.common.pairSharedTransition
 import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissCoordinatorLayout
 import ru.xmn.filmfilmfilm.services.film.FilmData
 import ru.xmn.filmfilmfilm.services.tmdb.PersonType
 import java.lang.Exception
 
-
+//todo иногда не отображает данные
 class FilmDetailsActivity : LifecycleActivity() {
 
     companion object {
@@ -60,6 +60,10 @@ class FilmDetailsActivity : LifecycleActivity() {
             description_container.visibility = View.VISIBLE
         }
 
+        setActionBar(toolbar)
+        actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar.setDisplayShowHomeEnabled(true)
+
         chromeFader = ElasticDragDismissCoordinatorLayout.SystemChromeFader(this)
 
         val posterUrl = intent.getStringExtra(POSTER_KEY)
@@ -74,12 +78,22 @@ class FilmDetailsActivity : LifecycleActivity() {
 
         cast.layoutManager = LinearLayoutManager(this)
         crew.layoutManager = LinearLayoutManager(this)
-        cast.adapter = PersonsAdapter(this, main_appbar.pairSharedTransition())
-        crew.adapter = PersonsAdapter(this, main_appbar.pairSharedTransition())
+        cast.adapter = PersonsAdapter(this)
+        crew.adapter = PersonsAdapter(this)
 
         if (savedInstanceState == null)
             loadPosterThenStartTransition(posterUrl)
         else {poster.loadUrl(posterUrl)}
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     private fun runEnterAnimation() {
@@ -110,6 +124,7 @@ class FilmDetailsActivity : LifecycleActivity() {
     }
 
     private fun bindUi(filmData: FilmData) {
+        actionBar.title = filmData.title
         filmName.text = filmData.title
         genres.text = filmData.genres.map { it.name }.joinToString()
         info_view.text = filmData.overview
