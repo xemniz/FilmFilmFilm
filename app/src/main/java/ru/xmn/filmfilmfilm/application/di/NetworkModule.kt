@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
-import ru.xmn.filmfilmfilm.common.addLoggingInterceptor
+import ru.xmn.filmfilmfilm.common.extensions.addLoggingInterceptor
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 

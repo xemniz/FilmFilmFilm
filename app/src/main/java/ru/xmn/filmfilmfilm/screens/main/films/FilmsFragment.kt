@@ -11,8 +11,7 @@ import android.view.ViewGroup
 import io.realm.OrderedRealmCollection
 import kotlinx.android.synthetic.main.fragment_one_day_films.*
 import ru.xmn.filmfilmfilm.R
-import ru.xmn.filmfilmfilm.common.inflate
-import ru.xmn.filmfilmfilm.common.ui.ToolbarOwner
+import ru.xmn.filmfilmfilm.common.extensions.inflate
 import ru.xmn.filmfilmfilm.services.film.FilmData
 import ru.xmn.filmfilmfilm.screens.main.films.viewmodels.FilmsFragmentViewModel
 
@@ -21,17 +20,14 @@ class FilmsFragment : LifecycleFragment() {
     companion object {
         val DAYS_OFFSET = "days_offset"
 
-        fun withDaysOffset(offset: Int, toolbarOwner: ToolbarOwner): FilmsFragment {
+        fun withDaysOffset(offset: Int): FilmsFragment {
             val fragment = FilmsFragment()
             val args = Bundle()
             args.putInt(DAYS_OFFSET, offset)
             fragment.setArguments(args)
-            fragment.toolbarOwner = toolbarOwner
             return fragment
         }
     }
-
-    lateinit var toolbarOwner: ToolbarOwner;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container?.inflate(R.layout.fragment_one_day_films)
@@ -42,6 +38,7 @@ class FilmsFragment : LifecycleFragment() {
         super.onViewCreated(view, savedInstanceState)
         movieList?.apply {
             layoutManager = LinearLayoutManager(context)
+            adapter = FilmsAdapter(activity)
         }
     }
 
@@ -67,8 +64,8 @@ class FilmsFragment : LifecycleFragment() {
         model.films.observe(this, Observer({ it?.let { it1 -> showMovies(it1) } }))
     }
 
-    fun showMovies(films: OrderedRealmCollection<FilmData>) {
-        movieList.adapter = FilmsAdapter(activity, films)
+    fun showMovies(films: List<FilmData>) {
+        (movieList.adapter as FilmsAdapter).items = films
     }
 
 }

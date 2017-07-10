@@ -41,7 +41,8 @@ dependencies {
     ext.dagger_version = "2.10"
     ext.retrofitVersion = "2.2.0"
     ext.okhttpVersion = "3.7.0"
-    ext.supportLib = "25.3.1"
+    ext.supportLib = "25.4.0"
+    ext.archComp = "1.0.0-alpha3"
 
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -64,29 +65,24 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
     compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     compile("com.squareup.retrofit2:retrofit:$retrofitVersion") {
-        // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
         exclude module: 'okhttp'
     }
-
-    //    testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-//    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-
-
     kapt "com.google.dagger:dagger-compiler:${dagger_version}"
 
     compile 'io.realm:android-adapters:2.0.0'
     testCompile 'junit:junit:4.12'
     compile 'com.nshmura:recyclertablayout:1.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'android.arch.lifecycle:runtime:1.0.0-alpha1'
-    compile 'android.arch.lifecycle:extensions:1.0.0-alpha1'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile "android.arch.lifecycle:runtime:$archComp"
+    compile "android.arch.lifecycle:extensions:$archComp"
+    kapt "android.arch.lifecycle:compiler:$archComp"
+    compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.github.hotchemi:khronos:0.1.0'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'com.squareup.retrofit2:converter-moshi:2.3.0'
     testCompile 'junit:junit:4.12'
-    kapt 'android.arch.lifecycle:compiler:1.0.0-alpha1'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'io.github.microutils:kotlin-logging:1.4.5'
 }
 
 sourceSets {

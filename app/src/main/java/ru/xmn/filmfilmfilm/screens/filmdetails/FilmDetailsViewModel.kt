@@ -26,7 +26,7 @@ class FilmDetailsViewModel(application: Application?, val imdbId: String) : View
                 .where(FilmData::class.java)
                 .equalTo("imdbId", imdbId)
                 .findFirstAsync()
-                .addChangeListener <FilmData>{ film, _ -> filminfo.value = film }
+                .addChangeListener <FilmData>{ film, _ -> filminfo.value = film}
     }
 
     init {
@@ -34,6 +34,7 @@ class FilmDetailsViewModel(application: Application?, val imdbId: String) : View
     }
 
     class Factory(val application: Application?, val imdbId: String) : ViewModelProvider.NewInstanceFactory() {
+        @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T = FilmDetailsViewModel(application, imdbId) as T
     }
 }

@@ -9,7 +9,4 @@ import javax.inject.Inject
 class FilmDetailsProvider
 @Inject
 constructor(val filmDataManager: FilmDataManager, val tmdb: TmdbManager) {
-
-    fun getTmdbMovieInfo(imdbId: String) =
-                    tmdb.getTmdbMovieInfo(imdbId).doOnNext{filmDataManager.updateFilmData(it)}
 }

@@ -23,7 +23,8 @@ interface KudaGoService {
                     ",stars,director,writer,awards,trailer," +
                     "images,imdb_url,imdb_rating",
             @Query("page_size") pageSize: Int = 100,
-            @Query("actual_since") actualSince: Long,
-            @Query("actual_until") actualUntil: Long)
+            @Query("imdb_url") imdbUrl: String? = null,
+            @Query("actual_since") actualSince: Long? = null,
+            @Query("actual_until") actualUntil: Long? = null)
             : Observable<KudaGoMoviesResponse>
 }

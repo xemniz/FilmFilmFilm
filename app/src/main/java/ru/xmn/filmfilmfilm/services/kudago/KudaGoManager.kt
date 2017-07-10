@@ -2,7 +2,7 @@ package ru.xmn.filmfilmfilm.services.kudago
 
 import io.reactivex.Observable
 import khronos.*
-import ru.xmn.filmfilmfilm.common.timeStamp
+import ru.xmn.filmfilmfilm.common.extensions.timeStamp
 
 class KudaGoManager(private val service: KudaGoService){
 
@@ -13,4 +13,13 @@ class KudaGoManager(private val service: KudaGoService){
                 .getMovies(actualSince = since.timeStamp(), actualUntil = until.timeStamp())
     }
 
+    fun getMovies(imdbId: String): Observable<KudaGoMoviesResponse> {
+        return service
+                .getMovies(imdbUrl = imdbId.toImdbUrl())
+    }
+
+}
+
+private fun String.toImdbUrl(): String {
+    return "http://www.imdb.com/title/$this/"
 }

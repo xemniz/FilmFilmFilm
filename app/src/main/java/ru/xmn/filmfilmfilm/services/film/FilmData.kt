@@ -7,11 +7,11 @@ import java.util.*
 
 open class FilmData : RealmObject() {
     @PrimaryKey
-            //    var id: String = UUID.randomUUID().toString()
     var imdbId: String? = null
     var tmdbId: String? = null
     var title: String? = null
     var image: String? = null
+    var trailer: String? = null
     var backdrop: String? = null
     var overview: String? = null
     var director: String? = null

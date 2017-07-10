@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import ru.xmn.filmfilmfilm.common.abs
+import ru.xmn.filmfilmfilm.common.extensions.abs
 
 class FilmTabLayout(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : TabLayout(context, attrs, defStyleAttr) {
 
@@ -16,15 +16,11 @@ class FilmTabLayout(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
 
     constructor (context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    private val textViews = mutableListOf<FilmTabTextView>()
-
     override fun setupWithViewPager(viewPager: ViewPager?) {
         super.setupWithViewPager(viewPager)
         for (i in 0..tabCount - 1) {
             val tab = getTabAt(i)
             val view = FilmTabTextView(this.context)
-            //todo не лучший способ, нужно избавиться от проперти
-            textViews += view
             view.id = android.R.id.text1
             tab?.customView = view
         }
@@ -37,10 +33,10 @@ class FilmTabLayout(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
                     Log.v("FilmTabLayout", "working only with views in viewpager with Int tags")
                     return
                 }
-
+                val textView = (getTabAt(pagePosition)?.customView?.findViewById(android.R.id.text1) as? FilmTabTextView)
                 when {
-                    position <= -1.0f || position >= 1.0f -> textViews[pagePosition].scaleText(0F)
-                    else -> textViews[pagePosition].scaleText(1 - position.abs())
+                    position <= -1.0f || position >= 1.0f -> textView?.scaleText(0F)
+                    else -> textView?.scaleText(1 - position.abs())
                 }
             }
 

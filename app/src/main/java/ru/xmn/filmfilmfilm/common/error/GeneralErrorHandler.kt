@@ -7,7 +7,7 @@ import com.squareup.moshi.Moshi
 import io.reactivex.functions.Consumer
 import retrofit2.HttpException
 import retrofit2.Response
-import ru.xmn.filmfilmfilm.common.fromJson
+import ru.xmn.filmfilmfilm.common.extensions.fromJson
 import ru.xmn.filmfilmfilm.common.ui.BaseView
 import java.io.IOException
 import java.lang.ref.WeakReference

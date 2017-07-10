@@ -8,15 +8,12 @@ import android.graphics.Color
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import android.widget.FrameLayout
 import ru.xmn.filmfilmfilm.R
 import ru.xmn.filmfilmfilm.common.utils.AnimUtils
 import ru.xmn.filmfilmfilm.common.utils.ColorUtils
 import ru.xmn.filmfilmfilm.common.utils.ViewUtils
-import ru.xmn.filmfilmfilm.common.views
-import kotlin.properties.Delegates
+import ru.xmn.filmfilmfilm.common.extensions.views
 
 class ElasticDragDismissCoordinatorLayout
 @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null,

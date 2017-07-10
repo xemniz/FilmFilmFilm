@@ -20,13 +20,16 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.activity_film_details.*
 import ru.xmn.filmfilmfilm.R
-import ru.xmn.filmfilmfilm.common.delay
-import ru.xmn.filmfilmfilm.common.dur
-import ru.xmn.filmfilmfilm.common.loadUrl
+import ru.xmn.filmfilmfilm.common.extensions.delay
+import ru.xmn.filmfilmfilm.common.extensions.dur
+import ru.xmn.filmfilmfilm.common.extensions.loadUrl
 import ru.xmn.filmfilmfilm.common.views.ElasticDragDismissCoordinatorLayout
 import ru.xmn.filmfilmfilm.services.film.FilmData
 import ru.xmn.filmfilmfilm.services.tmdb.PersonType
 import java.lang.Exception
+import android.content.Intent
+import android.net.Uri
+
 
 //todo иногда не отображает данные
 class FilmDetailsActivity : LifecycleActivity() {
@@ -45,7 +48,9 @@ class FilmDetailsActivity : LifecycleActivity() {
         if (savedInstanceState == null) {
             postponeEnterTransition()
             setEnterSharedElementCallback(object : SharedElementCallback() {
-                override fun onSharedElementEnd(sharedElementNames: MutableList<String>?, sharedElements: MutableList<View>?, sharedElementSnapshots: MutableList<View>?) {
+                override fun onSharedElementEnd(sharedElementNames: MutableList<String>?,
+                                                sharedElements: MutableList<View>?,
+                                                sharedElementSnapshots: MutableList<View>?) {
                     super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
                     val visible = description_container.visibility == View.VISIBLE
 
@@ -83,7 +88,9 @@ class FilmDetailsActivity : LifecycleActivity() {
 
         if (savedInstanceState == null)
             loadPosterThenStartTransition(posterUrl)
-        else {poster.loadUrl(posterUrl)}
+        else {
+            poster.loadUrl(posterUrl)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -131,6 +138,12 @@ class FilmDetailsActivity : LifecycleActivity() {
         ratings_info.text = filmData.ratings.associateBy({ it.source }, { it.value })
                 .map { "${it.key}: ${it.value}" }.joinToString(separator = ", ")
         expandedImage.loadUrl(filmData.backdrop ?: "")
+        filmData.trailer?.let {
+            videoIcon.visibility = View.VISIBLE
+            videoIcon.setOnClickListener({
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(filmData.trailer)))
+            })
+        }
 
         (cast.adapter as PersonsAdapter).apply { items = filmData.persons.filter { it.type == PersonType.CAST.name }.map { PersonsAdapter.PersonItem(it.tmdbId, it.name ?: "", it.descr ?: "", PersonType.CAST) }.take(7) }
         (crew.adapter as PersonsAdapter).apply { items = filmData.persons.filter { it.type == PersonType.CREW.name }.map { PersonsAdapter.PersonItem(it.tmdbId, it.name ?: "", it.descr ?: "", PersonType.CREW) }.take(7) }

@@ -3,8 +3,8 @@ package ru.xmn.filmfilmfilm.services.omdb
 import com.squareup.moshi.Moshi
 import io.realm.RealmObject
 import khronos.Dates
-import ru.xmn.filmfilmfilm.common.listFromJson
-import ru.xmn.filmfilmfilm.common.toJson
+import ru.xmn.filmfilmfilm.common.extensions.listFromJson
+import ru.xmn.filmfilmfilm.common.extensions.toJson
 import java.util.*
 
 

@@ -6,9 +6,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import ru.xmn.filmfilmfilm.application.Config
 import ru.xmn.filmfilmfilm.application.di.provideRestAdapter
-import ru.xmn.filmfilmfilm.common.addParameterInterceptor
-import ru.xmn.filmfilmfilm.services.omdb.OmdbManager
-import ru.xmn.filmfilmfilm.services.omdb.OmdbService
+import ru.xmn.filmfilmfilm.common.extensions.addParameterInterceptor
 import javax.inject.Named
 import javax.inject.Singleton
 

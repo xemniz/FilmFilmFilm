@@ -20,6 +20,7 @@ class PersonDetailsActivity : LifecycleActivity() {
     companion object {
         val PERSON_ID = "PersonDetailsActivity.PersonId"
         val PERSON_TYPE = "PersonDetailsActivity.PersonType"
+        val PERSON_NAME = "PersonDetailsActivity.PersonName"
     }
 
     lateinit private var chromeFader: ElasticDragDismissFrameLayout.SystemChromeFader
@@ -28,6 +29,7 @@ class PersonDetailsActivity : LifecycleActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_person_detail)
         person_films.layoutManager = LinearLayoutManager(this)
+        person_films.adapter = FilmsAdapter(this)
         setActionBar(toolbar)
         actionBar.setDisplayHomeAsUpEnabled(true)
         actionBar.setDisplayShowHomeEnabled(true)
@@ -36,6 +38,9 @@ class PersonDetailsActivity : LifecycleActivity() {
 
         val personId = intent.getStringExtra(PERSON_ID)
         val personType = intent.getSerializableExtra(PERSON_TYPE) as PersonType
+        val personName = intent.getStringExtra(PERSON_NAME)
+
+        actionBar.title = personName
 
         val factory = PersonDetailsViewModel.Factory(
                 application, personId, personType)
@@ -75,7 +80,7 @@ class PersonDetailsActivity : LifecycleActivity() {
         model.films.observe(this, Observer {  it?.let { bindUi(it)  } })
     }
 
-    private fun bindUi(it: OrderedRealmCollection<FilmData>){
-        person_films.adapter = FilmsAdapter(this, it)
+    private fun bindUi(it: List<FilmData>){
+        (person_films.adapter as FilmsAdapter).items = it
     }
 }
